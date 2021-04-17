@@ -2,7 +2,6 @@
     width: 100%;
     height: auto;
     min-height: 48px;
-    direction: rtl;
     display: flex;
     .search-dynamic-wrapper{
         width: calc(100% - 48px );
@@ -17,7 +16,9 @@
             row-gap: 8px;
             column-gap: 8px;
             .filter-item{
-                display: inline-block;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
                 margin:0px 0px;
                 padding: 4px 8px;
                 background-color: #408cff;
@@ -27,7 +28,6 @@
                     cursor: pointer;
                     display: block;
                     padding: 4px 8px 0px 8px;
-                    float: right;
                     box-sizing: border-box;
                     svg{
                         fill:#fff;
@@ -37,8 +37,6 @@
                 }
                 .filter-label{
                     display: block;
-                    float: right;
-                    padding: 2px 0 0 0;
                     box-sizing: border-box;
                 }
             }
