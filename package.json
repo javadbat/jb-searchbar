@@ -1,6 +1,7 @@
 {
   "name": "jb-searchbar",
   "description": "searchbar web component",
+  "type": "module",
   "author": {
 		"name": "mohammad javad bathaei",
 		"email": "javadbat@gmail.com"
@@ -13,7 +14,7 @@
     "search bar",
     "web component"
   ],
-  "version": "1.0.7",
+  "version": "1.0.9",
   "bugs": "https://github.com/javadbat/jb-input/issues",
   "license": "MIT",
   "files": [
@@ -29,8 +30,8 @@
 		"url": "git@github.com:javadbat/jb-input.git"
   },
   "dependencies": {
-    "jb-input": ">=1.0.10",
-    "jb-select": ">=1.0.3",
-    "jb-date-input": ">=1.0.9"
+    "jb-input": ">=1.0.14",
+    "jb-select": ">=1.0.7",
+    "jb-date-input": ">=1.0.14"
   }
 }
