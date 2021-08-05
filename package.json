@@ -15,7 +15,7 @@
     "web component"
   ],
   "version": "1.0.9",
-  "bugs": "https://github.com/javadbat/jb-input/issues",
+  "bugs": "https://github.com/javadbat/jb-searchbar/issues",
   "license": "MIT",
   "files": [
     "LICENSE",
@@ -27,7 +27,7 @@
   "main": "index.js",
   "repository": {
 		"type": "git",
-		"url": "git@github.com:javadbat/jb-input.git"
+		"url": "git@github.com:javadbat/jb-searchbar.git"
   },
   "dependencies": {
     "jb-input": ">=1.0.14",
