@@ -34,6 +34,14 @@ import 'jb-searchbar';
 
 filter list is a list of your filter you want user choose filter from and set like this:
 
+## search on change
+
+you can trigger search by clicking on search button, if you want to trigger it on every change set `searchOnChange` like this:
+
+```javascript
+document.querySelector('jb-searchbar').searchOnChange = true;
+```
+
 ```js
 document.querySelector('jb-searchbar').columnList = [
         {
