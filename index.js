@@ -1,1 +1,1 @@
-import './dist/JBSearchbar.js';
+import './dist/jb-searchbar.js';

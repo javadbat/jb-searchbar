@@ -3,9 +3,9 @@
   "description": "searchbar web component",
   "type": "module",
   "author": {
-		"name": "mohammad javad bathaei",
-		"email": "javadbat@gmail.com"
-	},
+    "name": "mohammad javad bathaei",
+    "email": "javadbat@gmail.com"
+  },
   "keywords": [
     "jb",
     "jb-searchbar",
@@ -14,7 +14,7 @@
     "search bar",
     "web component"
   ],
-  "version": "1.1.0",
+  "version": "2.0.1",
   "bugs": "https://github.com/javadbat/jb-searchbar/issues",
   "license": "MIT",
   "files": [
@@ -24,14 +24,16 @@
     "dist/",
     "index.js"
   ],
+  "types": "./dist/jb-searchbar.d.ts",
   "main": "index.js",
   "repository": {
-		"type": "git",
-		"url": "git@github.com:javadbat/jb-searchbar.git"
+    "type": "git",
+    "url": "git@github.com:javadbat/jb-searchbar.git"
   },
   "dependencies": {
-    "jb-input": ">=2.0.4",
-    "jb-select": ">=2.0.3",
-    "jb-date-input": ">=2.0.2"
+    "jb-date-input": ">=3.9.0",
+    "jb-input": ">=2.8.2",
+    "jb-searchbar": "^2.0.0",
+    "jb-select": ">=4.5.4"
   }
 }
