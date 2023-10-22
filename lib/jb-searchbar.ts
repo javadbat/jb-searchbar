@@ -1,7 +1,7 @@
 import HTML from './jb-searchbar.html';
 import CSS from './jb-searchbar.scss';
 import { InputFactory } from './InputFactory';
-import { FilterColumn, InputState, IntentColumn, JBSearchbarElements, FilterItem, SpliceArgs } from './types';
+import { FilterColumn, InputState, IntentColumn, JBSearchbarElements, FilterItem, SpliceArgs, JBSearchbarValueItem, JBSearchbarValue } from './types';
 import { JBSelectWebComponent } from 'jb-select';
 export class JBSearchbarWebComponent extends HTMLElement {
     #isLoading = false;
@@ -42,7 +42,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
         }
         this.#inputState = value;
     }
-    get value() {
+    get value():JBSearchbarValue{
         return this.filterList.map(x => ({ column: x.column, value: x.value }));
     }
     get columnList() {

@@ -44,3 +44,8 @@ export type FilterItem = {
     dom?:HTMLDivElement
 }
 export type SpliceArgs = [start:number,deleteCount: number, ...items: FilterItem[]]
+export type JBSearchbarValueItem = {
+    column:FilterColumn,
+    value:string
+}
+export type JBSearchbarValue = JBSearchbarValueItem[];
