@@ -1,7 +1,7 @@
 
 # jb-searchbar
 
-minimalistic customizable search bar web-component
+minimalistic customizable search bar web-component for adding filter options in minimum space
 sample:<https://codepen.io/javadbat/pen/rNjrZpy>
 
 ## usage

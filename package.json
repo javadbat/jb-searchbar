@@ -33,7 +33,6 @@
   "dependencies": {
     "jb-date-input": ">=3.9.0",
     "jb-input": ">=2.8.2",
-    "jb-searchbar": "^2.0.0",
     "jb-select": ">=4.5.4"
   }
 }
