@@ -80,7 +80,7 @@ class InputFactory {
         const columnConfig = column.config as SelectFieldTypeConfig;
         select.callbacks.getOptionTitle = columnConfig.getOptionTitle;
         select.callbacks.getOptionValue = columnConfig.getOptionValue;
-        select.optionList = column.config.optionList;
+        select.optionList = columnConfig.optionList;
         select.addEventListener('change', (e) => {
             const target = e.target as JBSelectWebComponent;
             let title = "";

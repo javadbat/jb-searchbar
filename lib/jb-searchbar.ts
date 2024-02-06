@@ -34,8 +34,10 @@ export class JBSearchbarWebComponent extends HTMLElement {
         if (value == "SELECT_COLUMN") {
             this.elements.columnSelect.value = null;
             this.elements.intent.wrapper.classList.add('--hide');
-            this.elements.columnSelect.parentElement?.classList.remove('--hide');
-            this.elements.columnSelect.focus();
+            if(this.elements.columnSelect.optionList.length){
+                this.#showColumnSelect();
+                this.elements.columnSelect.focus();
+            }
         } else if (value == "FILL_VALUE") {
             this.elements.intent.wrapper.classList.remove('--hide');
             this.elements.intent.input.wrapper.innerHTML = "";
@@ -88,6 +90,11 @@ export class JBSearchbarWebComponent extends HTMLElement {
                     const customSplice = (...args:SpliceArgs) => {
                         const domIndex = args[0];
                         this.elements.filterListWrapper.children[domIndex].remove();
+                        setTimeout(()=>{
+                            if(this.elements.columnSelect.optionList.length && this.inputState == "SELECT_COLUMN"){
+                                this.#showColumnSelect();
+                            }
+                        },0);
 
                         //because we apply function like this the get wont call again in proxy
                         //we apply into proxy not original obj so setter hooks for splice in setter do their job
@@ -101,7 +108,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
                 if (!(property == "length") && typeof property == "string") {
                     if (parseInt(property) == target.length) {
                         //when push
-                        const dom = this.createFilterDOM(value.value,value.label);
+                        const dom = this.createFilterDOM(value.valueString,value.label);
                         value.dom = dom;
                         this.elements.filterListWrapper.appendChild(dom);
                     }
@@ -336,6 +343,9 @@ export class JBSearchbarWebComponent extends HTMLElement {
     search() {
         const event = new CustomEvent('search');
         this.dispatchEvent(event);
+    }
+    #showColumnSelect(){
+        this.elements.columnSelect.parentElement?.classList.remove('--hide');
     }
 }
 const myElementNotExists = !customElements.get('jb-searchbar');

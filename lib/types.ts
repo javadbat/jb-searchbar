@@ -58,7 +58,8 @@ export type CreateInputDomArgs = {
     setIntentActive:(value:boolean, err?:string)=>void,
     column:FilterColumn
 }
-export type SelectFieldTypeConfig = {
-    getOptionTitle: (option:any)=>string,
-    getOptionValue:(option:any)=>any
+export type SelectFieldTypeConfig<OptionType = any> = {
+    optionList:OptionType[],
+    getOptionTitle: (option:OptionType)=>string,
+    getOptionValue:(option:OptionType)=>any
 }
