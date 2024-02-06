@@ -1,6 +1,7 @@
 import { JBDateInputWebComponent } from "jb-date-input";
 import { JBInputWebComponent } from "jb-input";
 import { JBSelectWebComponent } from "jb-select";
+import { string } from "prop-types";
 
 export type InputState = "SELECT_COLUMN" | "FILL_VALUE";
 export type JBSearchbarElements = {
@@ -29,17 +30,19 @@ export type FilterColumn = {
     label: string,
     type: 'TEXT' | 'DATE' | 'SELECT' | 'NUMBER',
     maxUsageCount?: number,
-    config?:any
+    config?:any|SelectFieldTypeConfig,
 }
 export type IntentColumn = {
     column:FilterColumn | null,
     label:string | null,
-    value:string | null,
+    valueString:string | null,
+    value:any | null,
     active:boolean
 }
 export type FilterItem = {
     column:FilterColumn,
-    value:string,
+    value:any,
+    valueString:string,
     label:string,
     dom?:HTMLDivElement
 }
@@ -49,3 +52,13 @@ export type JBSearchbarValueItem = {
     value:string
 }
 export type JBSearchbarValue = JBSearchbarValueItem[];
+export type CreateInputDomArgs = {
+    onIntentSubmitted:()=>void,
+    setIntentColumnValue:(value:any,stringValue:string,label:string)=>void,
+    setIntentActive:(value:boolean, err?:string)=>void,
+    column:FilterColumn
+}
+export type SelectFieldTypeConfig = {
+    getOptionTitle: (option:any)=>string,
+    getOptionValue:(option:any)=>any
+}

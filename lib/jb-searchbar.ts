@@ -11,6 +11,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
     intentColumn:IntentColumn = {
         column: null,
         value: null,
+        valueString:null,
         label: null,
         active: false
     };
@@ -49,7 +50,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
         return this.#columnList;
     }
     set columnList(value:FilterColumn[]) {
-        //TODO: check validation of column to be array ind has neccessary prop
+        //TODO: check validation of column to be array ind has necessary prop
         this.setColumnList(value);
     }
     #searchOnChange = false;
@@ -67,7 +68,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
     }
     registerEventListener() {
         this.elements.columnSelect.addEventListener('change', this.onColumnSelected.bind(this));
-        this.elements.intent.submitButton.addEventListener('click', this.onIntentSubmited.bind(this));
+        this.elements.intent.submitButton.addEventListener('click', this.onIntentSubmitted.bind(this));
         this.elements.columnSelect.addEventListener('init', () => {
             this.elements.columnSelect.focus();
         });
@@ -230,7 +231,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
         this.elements.intent.input.wrapper.appendChild(inputDom);
     }
     createIntentInputDom(column:FilterColumn) {
-        const setIntentActive = (value, err = "") => {
+        const setIntentActive = (value:boolean, err = "") => {
             this.intentColumn.active = value;
             if (value) {
                 this.elements.intent.submitButton.classList.add('--active');
@@ -240,28 +241,30 @@ export class JBSearchbarWebComponent extends HTMLElement {
                 this.elements.intent.submitButton.setAttribute('title', err);
             }
         };
-        const setIntentColumnValue = (value:string, label:string) => {
+        const setIntentColumnValue = (value:any,valueString:string, label:string) => {
             this.intentColumn.value = value;
             this.intentColumn.label = label;
+            this.intentColumn.valueString = valueString;
         };
         switch (column.type) {
             case 'TEXT':
-                return this.#inputFactory.createTextInput({ onIntentSubmited: this.onIntentSubmited.bind(this), setIntentActive: setIntentActive, setIntentColumnValue });
+                return this.#inputFactory.createTextInput({ column: column,onIntentSubmitted: this.onIntentSubmitted.bind(this), setIntentActive: setIntentActive, setIntentColumnValue });
             case 'NUMBER':
-                return this.#inputFactory.createNumberInput({ onIntentSubmited: this.onIntentSubmited.bind(this), setIntentActive: setIntentActive, setIntentColumnValue });
+                return this.#inputFactory.createNumberInput({column, onIntentSubmitted: this.onIntentSubmitted.bind(this), setIntentActive: setIntentActive, setIntentColumnValue });
             case 'SELECT':
-                return this.#inputFactory.createSelectInput({ column, onIntentSubmited: this.onIntentSubmited.bind(this), setIntentActive: setIntentActive, setIntentColumnValue });
+                return this.#inputFactory.createSelectInput({ column, onIntentSubmitted: this.onIntentSubmitted.bind(this), setIntentActive: setIntentActive, setIntentColumnValue });
             case 'DATE':
-                return this.#inputFactory.createDateInput({ column, onIntentSubmited: this.onIntentSubmited.bind(this), setIntentActive: setIntentActive, setIntentColumnValue });
+                return this.#inputFactory.createDateInput({ column, onIntentSubmitted: this.onIntentSubmitted.bind(this), setIntentActive: setIntentActive, setIntentColumnValue });
         }
     }
-    onIntentSubmited() {
-        if (this.intentColumn.column && this.intentColumn.value && this.intentColumn.label && this.intentColumn.active) {
-            this.submitIntent(this.intentColumn.column, this.intentColumn.value, this.intentColumn.label);
+    onIntentSubmitted() {
+        if (this.intentColumn.column && this.intentColumn.value && this.intentColumn.valueString && this.intentColumn.label && this.intentColumn.active) {
+            this.submitIntent(this.intentColumn.column, this.intentColumn.value, this.intentColumn.valueString, this.intentColumn.label);
             this.inputState = "SELECT_COLUMN";
             this.intentColumn = {
                 column: null,
                 value: null,
+                valueString:null,
                 label: null,
                 active: false
             };
@@ -269,11 +272,12 @@ export class JBSearchbarWebComponent extends HTMLElement {
 
         }
     }
-    submitIntent(column:FilterColumn, value:string, label:string) {
+    submitIntent(column:FilterColumn,value:any, valueString:string, label:string) {
         this.filterList.push({
-            column: column,
-            value: value,
-            label: label
+            column,
+            valueString,
+            value,
+            label
         });
         this.setColumnListSelectOptionList();
         this.triggerOnChange();
@@ -319,7 +323,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
             spinnerLine.setAttribute("d", "M410 410 L 415 415");
             growLineAnimation.play();
         };
-        ReverseCurveLineFunction.onfinish = ReverseCurveLineFunction;
+        ReverseCurveLineAnimation.onfinish = ReverseCurveLineFunction;
         ShrinkLineAnimation.play();
     }
     triggerOnChange(){

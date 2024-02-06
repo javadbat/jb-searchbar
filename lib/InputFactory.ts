@@ -4,24 +4,25 @@ import 'jb-input';
 import 'jb-date-input';
 import { JBInputWebComponent } from 'jb-input';
 import { JBSelectWebComponent } from 'jb-select';
-import { JBDateInputWebComponent } from 'jb-date-input';
-import {FilterColumn} from './types';
+import { JBDateInputWebComponent, ValueTypes } from 'jb-date-input';
+import {CreateInputDomArgs, SelectFieldTypeConfig} from './types';
 class InputFactory {
-    createTextInput({ onIntentSubmited, setIntentColumnValue, setIntentActive }) {
+    createTextInput(args:CreateInputDomArgs) {
+        const {column,onIntentSubmitted,setIntentActive,setIntentColumnValue} = args;
         const input = document.createElement('jb-input') as JBInputWebComponent;
         input.addEventListener('keydown', (e) => {
             const target = e.target as JBInputWebComponent;
             if (e.keyCode == 13 && target.value.trim() != "") {
-                onIntentSubmited();
+                onIntentSubmitted();
             }
         });
         input.addEventListener('keyup', (e) => {
             const target = e.target as JBInputWebComponent;
-            setIntentColumnValue(target.value, target.value);
+            setIntentColumnValue(target.value,target.value,column.label);
             if (target.validation?.isValid) {
                 setIntentActive(true);
             } else {
-                setIntentActive(false, target.validation?.message);
+                setIntentActive(false, target.validation?.message || undefined);
             }
         });
         input.addEventListener('init', () => {
@@ -38,23 +39,24 @@ class InputFactory {
         });
         return input;
     }
-    createNumberInput({ onIntentSubmited, setIntentColumnValue, setIntentActive }) {
+    createNumberInput(args:CreateInputDomArgs) {
+        const {column,onIntentSubmitted,setIntentActive,setIntentColumnValue} = args;
         const input = document.createElement('jb-input') as JBInputWebComponent;
 
         input.addEventListener('keydown', (e) => {
             const target = e.target as JBInputWebComponent;
             if (e.keyCode == 13 && target.value.trim() != "") {
-                onIntentSubmited();
+                onIntentSubmitted();
             }
         });
         input.addEventListener('keyup', (e) => {
             const target = e.target as JBInputWebComponent;
             const value = parseInt(target.value);
-            setIntentColumnValue(value, target.value);
+            setIntentColumnValue(value,target.value, column.label);
             if (target.validation && target.validation.isValid) {
                 setIntentActive(true);
             } else {
-                setIntentActive(false, target.validation?.message);
+                setIntentActive(false, target.validation?.message || undefined);
             }
         });
         input.addEventListener('init', () => {
@@ -72,27 +74,32 @@ class InputFactory {
         });
         return input;
     }
-    createSelectInput({ column, onIntentSubmited, setIntentColumnValue, setIntentActive }) {
+    createSelectInput(args:CreateInputDomArgs) {
+        const {column,onIntentSubmitted,setIntentActive,setIntentColumnValue} = args;
         const select = document.createElement('jb-select') as JBSelectWebComponent;
-        select.callbacks.getOptionTitle = column.config.getOptionTitle;
-        select.callbacks.getOptionValue = column.config.getOptionValue;
+        const columnConfig = column.config as SelectFieldTypeConfig;
+        select.callbacks.getOptionTitle = columnConfig.getOptionTitle;
+        select.callbacks.getOptionValue = columnConfig.getOptionValue;
         select.optionList = column.config.optionList;
         select.addEventListener('change', (e) => {
             const target = e.target as JBSelectWebComponent;
-            let label = "";
-            label = target.selectedOptionTitle;
-            setIntentColumnValue(target.value, label);
+            let title = "";
+            title = target.selectedOptionTitle;
+            setIntentColumnValue(target.value,title, column.label);
             setIntentActive(true);
-            onIntentSubmited();
+            onIntentSubmitted();
         });
         select.addEventListener('init', () => {
             select.focus();
         });
         return select;
     }
-    createDateInput({ column, onIntentSubmited, setIntentColumnValue, setIntentActive }) {
+    createDateInput(args:CreateInputDomArgs) {
+        const {column,onIntentSubmitted,setIntentActive,setIntentColumnValue} = args;
         const dateInput = document.createElement('jb-date-input') as JBDateInputWebComponent;
         dateInput.required = true;
+        dateInput.valueType = ValueTypes.jalali;
+        dateInput.setAttribute("format","YYYY/MM/DD");
         dateInput.addEventListener('init', () => {
             dateInput.focus();
         });
@@ -100,20 +107,20 @@ class InputFactory {
             const target = e.target as JBDateInputWebComponent;
             if (target.validation.isValid) {
                 setIntentActive(true);
-                const value = target.value;
-                const label = target.inputValue;
-                setIntentColumnValue(value, label);
+                const value = target.valueInDate;
+                const valueString = target.value;
+                setIntentColumnValue(value,valueString, column.label);
             } else {
-                setIntentActive(false, target.validation.message);
+                setIntentActive(false, target.validation.message || undefined);
             }
         });
         dateInput.addEventListener('select', (e) => {
             const target = e.target as JBDateInputWebComponent;
             setIntentActive(true);
-            const value = target.value;
-            const label = target.inputValue;
-            setIntentColumnValue(value, label);
-            onIntentSubmited();
+            const value = target.valueInDate;
+            const valueString = target.value;
+            setIntentColumnValue(value,valueString, column.label);
+            onIntentSubmitted();
         });
         return dateInput;
     }
