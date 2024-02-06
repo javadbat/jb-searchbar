@@ -88,8 +88,8 @@ export class JBSearchbarWebComponent extends HTMLElement {
                         const domIndex = args[0];
                         this.elements.filterListWrapper.children[domIndex].remove();
 
-                        //becuase we apply function like this the get wont call again in proxy
-                        //we apply into proxy not orginal obj so setter hooks for splice in setter do their job
+                        //because we apply function like this the get wont call again in proxy
+                        //we apply into proxy not original obj so setter hooks for splice in setter do their job
                         return origMethod.apply(receiver, args);
                     };
                     return customSplice;
@@ -302,7 +302,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
             if (self.isLoading == true) {
                 spinAnimation.play();
             } else {
-                ReversecurveLineAnimation.play();
+                ReverseCurveLineAnimation.play();
             }
         };
         spinAnimation.onfinish = spinFunction;
@@ -313,13 +313,13 @@ export class JBSearchbarWebComponent extends HTMLElement {
         };
         growLineAnimation.onfinish = growLineFunction;
 
-        const ReversecurveLineAnimation = spinnerLine.animate([{ d: 'path("M 255 475 A 220 220 0 0 0 475 255")' }, { d: 'path("M 407.82484150097946 413.25475607450323 A 220 220 0 0 0 413.25475607450323 407.8248415009794")' }], { id: 'ReverseCurveLine', duration: 400 });
-        ReversecurveLineAnimation.cancel();
-        const ReversecurveLineFunction = function () {
+        const ReverseCurveLineAnimation = spinnerLine.animate([{ d: 'path("M 255 475 A 220 220 0 0 0 475 255")' }, { d: 'path("M 407.82484150097946 413.25475607450323 A 220 220 0 0 0 413.25475607450323 407.8248415009794")' }], { id: 'ReverseCurveLine', duration: 400 });
+        ReverseCurveLineAnimation.cancel();
+        const ReverseCurveLineFunction = function () {
             spinnerLine.setAttribute("d", "M410 410 L 415 415");
             growLineAnimation.play();
         };
-        ReversecurveLineAnimation.onfinish = ReversecurveLineFunction;
+        ReverseCurveLineFunction.onfinish = ReverseCurveLineFunction;
         ShrinkLineAnimation.play();
     }
     triggerOnChange(){
