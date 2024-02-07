@@ -4,7 +4,7 @@ import 'jb-input';
 import 'jb-date-input';
 import { JBInputWebComponent } from 'jb-input';
 import { JBSelectWebComponent } from 'jb-select';
-import { JBDateInputWebComponent, ValueTypes } from 'jb-date-input';
+import { JBDateInputWebComponent } from 'jb-date-input';
 import {CreateInputDomArgs, SelectFieldTypeConfig} from './types';
 class InputFactory {
     createTextInput(args:CreateInputDomArgs) {
@@ -98,7 +98,7 @@ class InputFactory {
         const {column,onIntentSubmitted,setIntentActive,setIntentColumnValue} = args;
         const dateInput = document.createElement('jb-date-input') as JBDateInputWebComponent;
         dateInput.required = true;
-        dateInput.valueType = ValueTypes.jalali;
+        dateInput.valueType = "JALALI";
         dateInput.setAttribute("format","YYYY/MM/DD");
         dateInput.addEventListener('init', () => {
             dateInput.focus();
