@@ -1,6 +1,7 @@
 import HTML from "./jb-searchbar.html";
 import CSS from "./jb-searchbar.scss";
 import { InputFactory } from "./InputFactory";
+import { JBSelectWebComponent } from "jb-select";
 import {
   FilterColumn,
   InputState,
@@ -8,10 +9,8 @@ import {
   JBSearchbarElements,
   FilterItem,
   SpliceArgs,
-  JBSearchbarValueItem,
   JBSearchbarValue,
 } from "./types";
-import { JBSelectWebComponent } from "jb-select";
 export class JBSearchbarWebComponent extends HTMLElement {
   #isLoading = false;
   #inputState: InputState = "SELECT_COLUMN";
