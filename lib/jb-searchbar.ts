@@ -1,7 +1,7 @@
 import HTML from "./jb-searchbar.html";
 import CSS from "./jb-searchbar.scss";
 import { InputFactory } from "./InputFactory";
-import { JBSelectWebComponent } from "jb-select";
+import { JBOptionListWebComponent, JBSelectWebComponent } from "jb-select";
 import {
   FilterColumn,
   InputState,
@@ -41,7 +41,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
     if (value == "SELECT_COLUMN") {
       this.elements.columnSelect.value = null;
       this.elements.intent.wrapper.classList.add("--hide");
-      if (this.elements.columnSelect.optionList.length) {
+      if (this.elements.columnSelectOptionList.optionList.length) {
         this.#showColumnSelect();
         this.elements.columnSelect.focus();
       }
@@ -106,7 +106,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
             this.elements.filterListWrapper.children[domIndex].remove();
             setTimeout(() => {
               if (
-                this.elements.columnSelect.optionList.length &&
+                this.elements.columnSelectOptionList.optionList.length &&
                 this.inputState == "SELECT_COLUMN"
               ) {
                 this.#showColumnSelect();
@@ -189,30 +189,16 @@ export class JBSearchbarWebComponent extends HTMLElement {
     element.innerHTML = html;
     shadowRoot.appendChild(element.content.cloneNode(true));
     this.elements = {
-      filterListWrapper: shadowRoot.querySelector(
-        ".filter-list-section"
-      ) as HTMLDivElement,
-      searchButton: {
-        wrapper: shadowRoot.querySelector(
-          ".search-button-wrapper"
-        ) as HTMLDivElement,
+      filterListWrapper: shadowRoot.querySelector(".filter-list-section") as HTMLDivElement,
+      searchButton: {wrapper: shadowRoot.querySelector(".search-button-wrapper") as HTMLDivElement,
         svg: {
-          spinnerLine: shadowRoot.querySelector(
-            ".search-button-wrapper .convertable-line"
-          ) as SVGClipPathElement,
-          spinnerBox: shadowRoot.querySelector(
-            ".search-button-wrapper .spin-line-group"
-          ) as SVGGElement,
+          spinnerLine: shadowRoot.querySelector(".search-button-wrapper .convertable-line") as SVGClipPathElement,
+          spinnerBox: shadowRoot.querySelector(".search-button-wrapper .spin-line-group") as SVGGElement,
         },
       },
-
-      columnSelect: shadowRoot.querySelector(
-        ".column-select"
-      ) as JBSelectWebComponent,
-      intent: {
-        column: shadowRoot.querySelector(
-          ".intent-wrapper .intent-column"
-        ) as HTMLDivElement,
+      columnSelect: shadowRoot.querySelector(".column-select") as JBSelectWebComponent,
+      columnSelectOptionList: shadowRoot.querySelector("#ColumnSelectOptionList") as JBOptionListWebComponent<FilterColumn,FilterColumn>,
+      intent: {column: shadowRoot.querySelector(".intent-wrapper .intent-column") as HTMLDivElement,
         input: {
           wrapper: shadowRoot.querySelector(
             ".intent-wrapper .intent-input-wrapper"
@@ -260,10 +246,10 @@ export class JBSearchbarWebComponent extends HTMLElement {
         }
         return true;
       });
-      this.elements.columnSelect.callbacks.getOptionTitle = (column) => {
+      this.elements.columnSelectOptionList.callbacks.getTitle = (column) => {
         return column.label;
       };
-      this.elements.columnSelect.optionList = columnList;
+      this.elements.columnSelectOptionList.optionList = columnList;
     }
   }
   onColumnSelected(e: Event) {

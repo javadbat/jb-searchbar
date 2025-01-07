@@ -3,7 +3,7 @@ import 'jb-select';
 import 'jb-input';
 import 'jb-date-input';
 import { JBInputWebComponent } from 'jb-input';
-import { JBSelectWebComponent } from 'jb-select';
+import { JBOptionListWebComponent, JBSelectWebComponent } from 'jb-select';
 import { JBDateInputWebComponent } from 'jb-date-input';
 import {CreateInputDomArgs, SelectFieldTypeConfig} from './types';
 class InputFactory {
@@ -77,10 +77,12 @@ class InputFactory {
   createSelectInput(args:CreateInputDomArgs) {
     const {column,onIntentSubmitted,setIntentActive,setIntentColumnValue} = args;
     const select = document.createElement('jb-select') as JBSelectWebComponent;
+    const optionList = document.createElement('jb-option-list') as JBOptionListWebComponent<any,any>;
+    select.appendChild(optionList);
     const columnConfig = column.config as SelectFieldTypeConfig;
-    select.callbacks.getOptionTitle = columnConfig.getOptionTitle;
-    select.callbacks.getOptionValue = columnConfig.getOptionValue;
-    select.optionList = columnConfig.optionList;
+    optionList.callbacks.getTitle = columnConfig.getOptionTitle;
+    optionList.callbacks.getValue = columnConfig.getOptionValue;
+    optionList.optionList = columnConfig.optionList;
     select.addEventListener('change', (e) => {
       const target = e.target as JBSelectWebComponent;
       let title = "";

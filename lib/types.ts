@@ -1,11 +1,12 @@
 import { JBDateInputWebComponent } from "jb-date-input";
 import { JBInputWebComponent } from "jb-input";
-import { JBSelectWebComponent } from "jb-select";
+import { JBOptionListWebComponent, JBSelectWebComponent } from "jb-select";
 import { string } from "prop-types";
 
 export type InputState = "SELECT_COLUMN" | "FILL_VALUE";
 export type JBSearchbarElements = {
     columnSelect:JBSelectWebComponent,
+    columnSelectOptionList:JBOptionListWebComponent<FilterColumn,FilterColumn>,
     filterListWrapper:HTMLDivElement,
     searchButton:{
         wrapper:HTMLDivElement,
