@@ -1,6 +1,6 @@
 {
-  "name": "jb-searchbar",
-  "description": "searchbar web component",
+  "name": "jb-searchbar-react",
+  "description": "searchbar react component",
   "type": "module",
   "author": {
     "name": "mohammad javad bathaei",
@@ -14,27 +14,22 @@
     "search bar",
     "web component"
   ],
-  "version": "2.4.0",
+  "version": "0.0.1",
   "bugs": "https://github.com/javadbat/jb-searchbar/issues",
   "license": "MIT",
   "files": [
-    "LICENSE",
     "README.md",
     "lib/",
     "dist/",
-    "react/",
-    "react/dist/",
     "index.js"
   ],
-  "types": "./dist/web-component/jb-searchbar/lib/jb-searchbar.d.ts",
+  "types": "./dist/web-component/jb-searchbar/react/lib/JBSearchbar.d.ts",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:javadbat/jb-searchbar.git"
   },
   "dependencies": {
-    "jb-date-input": ">=5.4.2",
-    "jb-input": ">=3.6.0",
-    "jb-select": ">=6.0.5"
+    "jb-searchbar": ">=2.4.0"
   }
 }

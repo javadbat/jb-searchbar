@@ -10,7 +10,9 @@ import {
   FilterItem,
   SpliceArgs,
   JBSearchbarValue,
-} from "./types";
+} from "./types.js";
+
+export * from './types.js';
 export class JBSearchbarWebComponent extends HTMLElement {
   #isLoading = false;
   #inputState: InputState = "SELECT_COLUMN";

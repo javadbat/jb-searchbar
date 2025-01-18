@@ -100,4 +100,4 @@ document.querySelector('jb-searchbar').columnList = [
 | Name                                | Description                                | Default Value  |
 |-------------------------------------|--------------------------------------------|----------------|
 | --jb-searchbar-filter-item-bg-color | background color of completed filter item  | #408cff        |
-| --jb-searchbar-filter-item-color    | text color of ompleted filter item         | #fff           |
+| --jb-searchbar-filter-item-color    | text color of completed filter item         | #fff           |
