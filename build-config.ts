@@ -25,5 +25,7 @@ export const reactComponentList: ReactComponentBuildConfig[] = [
       "prop-types": "PropTypes",
       "jb-searchbar": "JBSearchbar",
     },
+    umdName: "JBSearchbarReact",
+    dir: "./react"
   },
 ];
