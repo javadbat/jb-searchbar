@@ -1,6 +1,8 @@
-import { JBDateInputWebComponent } from "jb-date-input";
-import { JBInputWebComponent } from "jb-input";
-import { JBOptionListWebComponent, JBSelectWebComponent } from "jb-select";
+import type{ JBDateInputWebComponent } from "jb-date-input";
+import type { JBInputWebComponent } from "jb-input";
+import type { JBOptionListWebComponent, JBSelectWebComponent } from "jb-select";
+import type {EventTypeWithTarget} from 'jb-core';
+import type { JBSearchbarWebComponent } from "./jb-searchbar";
 
 export type InputState = "SELECT_COLUMN" | "FILL_VALUE";
 export type JBSearchbarElements = {
@@ -63,3 +65,5 @@ export type SelectFieldTypeConfig<OptionType = any> = {
     getOptionTitle: (option:OptionType)=>string,
     getOptionValue:(option:OptionType)=>any
 }
+
+export type JBSearchbarEventType<TEvent> = EventTypeWithTarget<TEvent,JBSearchbarWebComponent>

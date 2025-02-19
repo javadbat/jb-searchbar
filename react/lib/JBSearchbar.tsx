@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import {useBindEvent} from '../../../../common/hooks/use-event.js';
+import React, { useEffect, useRef } from 'react';
 import 'jb-searchbar';
 // eslint-disable-next-line no-duplicate-imports
 import {JBSearchbarWebComponent, FilterColumn} from 'jb-searchbar';
+import { useEvents } from './events-hook.js';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -29,13 +29,7 @@ export function JBSearchbar(props:Props) {
     }
   },[element.current, props.searchOnChange]);
 
-  const onSearch = useCallback((e:CustomEvent)=>{
-    if(element.current && typeof props.onSearch === 'function'){
-      props.onSearch(e);
-    }
-  },[element.current, props.onSearch]);
-
-  useBindEvent(element, 'search', onSearch);
+  useEvents(element,props);
 
   return (
     <jb-searchbar placeholder={props.placeholder} ref={element}></jb-searchbar>
