@@ -35,7 +35,7 @@ export function JBSearchbar(props:Props) {
     <jb-searchbar placeholder={props.placeholder} ref={element}></jb-searchbar>
   );
 }
-type Props = {
+export type Props = {
   placeholder: string,
   searchOnChange: boolean,
   onSearch: (e:CustomEvent)=>void,
