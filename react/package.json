@@ -23,7 +23,7 @@
     "dist/",
     "index.js"
   ],
-  "types": "./dist/web-component/jb-searchbar/react/lib/JBSearchbar.d.ts",
+  "types": "./dist/JBSearchbar.d.ts",
   "main": "index.js",
   "repository": {
     "type": "git",
