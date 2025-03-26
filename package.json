@@ -33,8 +33,8 @@
     "url": "git@github.com:javadbat/jb-searchbar.git"
   },
   "dependencies": {
-    "jb-date-input": ">=5.4.2",
-    "jb-input": ">=3.6.0",
+    "jb-date-input": ">=5.6.0",
+    "jb-input": ">=3.8.0",
     "jb-select": ">=6.0.5",
     "jb-core":">=0.4.0"
   }
