@@ -1,0 +1,9 @@
+:host{
+  --filter-item-bg-color: var(--jb-searchbar-filter-item-bg-color, var(--jb-primary));
+  --filter-item-color:var(--jb-searchbar-filter-item-color, var(--jb-text-contrast));
+  --remove-button-color: var(--jb-text-contrast);
+  --intent-submit-button-color:var(--jb-neutral-5);
+  --intent-submit-button-color-active:var(--jb-green);
+  --search-button-stroke:var(--jb-neutral-7);
+  --search-button-fill:var(--jb-white);
+}

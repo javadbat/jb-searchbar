@@ -1,3 +1,5 @@
+@use './variables.css';
+
 .jb-searchbar-web-component{
     width: 100%;
     height: auto;
@@ -21,8 +23,8 @@
                 justify-content: center;
                 align-items: center;
                 margin:0px 0px;
-                background-color:var(--jb-searchbar-filter-item-bg-color, #408cff);
-                color:var(--jb-searchbar-filter-item-color, #fff);
+                background-color: var(--filter-item-bg-color);
+                color: var(--filter-item-color);
                 border-radius: 36px;
                 gap:0.25rem;
                 padding: 0.25rem 0.5rem;
@@ -31,7 +33,7 @@
                     display: block;
                     box-sizing: border-box;
                     svg{
-                        fill:#fff;
+                        fill: var(--remove-button-color);
                         height: 0.75rem;
                         display: block;
                     }
@@ -92,11 +94,11 @@
                     &.--active{
                         cursor: pointer;
                         svg{
-                            fill:#28BD48;
+                            fill: var(--intent-submit-button-color-active);
                         }
                     }
                     svg{
-                        fill:#929292;
+                        fill: var(--intent-submit-button-color);
                     }
                 }
                 &.--hide{
@@ -117,8 +119,8 @@
             box-sizing: border-box;
             background-color: transparent;
             circle{
-                stroke: #7b7b7b;
-                fill: white;
+                stroke: var(--search-button-stroke);
+                fill: var(--search-button-fill);
                 stroke-width: 25px;
             }
             .spin-line-group {
@@ -129,7 +131,7 @@
                 }
                 path {
                     fill: none;
-                    stroke: #9b9b9b;
+                    stroke: var(--search-button-stroke);
                     stroke-linecap: round;
                     stroke-linejoin: round;
                     transition: 0.2s;

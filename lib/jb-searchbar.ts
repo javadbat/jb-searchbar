@@ -11,6 +11,7 @@ import {
   SpliceArgs,
   JBSearchbarValue,
 } from "./types.js";
+import {defineColors} from 'jb-core/theme';
 
 export * from './types.js';
 export class JBSearchbarWebComponent extends HTMLElement {
@@ -186,6 +187,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
   }
   initWebComponent() {
     const shadowRoot = this.attachShadow({ mode: "open" });
+    defineColors();
     const html = `<style>${CSS}</style>` + "\n" + HTML;
     const element = document.createElement("template");
     element.innerHTML = html;
