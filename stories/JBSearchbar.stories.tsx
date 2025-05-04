@@ -3,7 +3,7 @@ import {JBSearchbar, Props} from 'jb-searchbar/react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<Props> = {
-  title: "Example/JBSearchbar",
+  title: "Components/JBSearchbar",
   component: JBSearchbar,
 };
 export default meta;

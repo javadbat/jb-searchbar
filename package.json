@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "jb-date-input": ">=5.6.0",
-    "jb-input": ">=3.10.0",
+    "jb-input": ">=3.11.0",
     "jb-select": ">=6.3.1",
-    "jb-core":">=0.10.0"
+    "jb-core":">=0.14.0"
   }
 }

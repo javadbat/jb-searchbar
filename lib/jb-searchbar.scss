@@ -25,7 +25,7 @@
                 margin:0px 0px;
                 background-color: var(--filter-item-bg-color);
                 color: var(--filter-item-color);
-                border-radius: 36px;
+                border-radius: var(--filter-item-border-radius);
                 gap:0.25rem;
                 padding: 0.25rem 0.5rem;
                 .delete-btn{
@@ -46,7 +46,7 @@
         }
         .filter-input-section{
             --jb-select-margin: 0 0;
-            --jb-select-border-radius: 24px;
+            // --jb-select-border-radius: 24px;
             --jb-select-border-color: transparent;
             --jb-select-border-color-selected: transparent;
             --jb-select-bgcolor: #fff;
@@ -71,7 +71,7 @@
                     --jb-input-message-box-display:none;
                     //jb-select
                     --jb-select-margin: 0 0;
-                    --jb-select-border-radius: 24px;
+                    // --jb-select-border-radius: 24px;
                     --jb-select-border-color: transparent;
                     --jb-select-border-color-selected: transparent;
                     --jb-select-bgcolor: #fff;
