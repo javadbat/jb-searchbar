@@ -1,4 +1,6 @@
-<div class="jb-searchbar-web-component">
+export function renderHTML(): string {
+  return /* html */ `
+  <div class="jb-searchbar-web-component">
     <div class="search-dynamic-wrapper">
         <section class="filter-list-section"></section>
         <section class="filter-input-section">
@@ -31,4 +33,6 @@
             </g>
         </svg>
     </div>
-</div>
+  </div>
+  `;
+}
