@@ -1,10 +1,11 @@
+'use client';
 import React, { useEffect, useRef } from 'react';
 import 'jb-searchbar';
 // eslint-disable-next-line no-duplicate-imports
 import {JBSearchbarWebComponent, FilterColumn} from 'jb-searchbar';
 import { useEvents } from './events-hook.js';
 
-declare global {
+declare module "react" {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
@@ -17,8 +18,9 @@ declare global {
     }
   }
 }
+
 export function JBSearchbar(props:Props) {
-  const element = useRef<JBSearchbarWebComponent>();
+  const element = useRef<JBSearchbarWebComponent>(null);
   useEffect(() => {
     element.current.columnList = props.columnList;
   }, [element.current, props.columnList]);
