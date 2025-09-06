@@ -6,10 +6,8 @@ sample:<https://codepen.io/javadbat/pen/rNjrZpy>
 
 ## usage
 
-```cmd
-
+```sh
 npm i jb-searchbar
-
 ```
 
 ```js
