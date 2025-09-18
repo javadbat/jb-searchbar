@@ -4,20 +4,7 @@ import 'jb-searchbar';
 // eslint-disable-next-line no-duplicate-imports
 import {JBSearchbarWebComponent, FilterColumn} from 'jb-searchbar';
 import { useEvents } from './events-hook.js';
-
-declare module "react" {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace JSX {
-    interface IntrinsicElements {
-      'jb-searchbar': JBSearchbarType;
-    }
-    interface JBSearchbarType extends React.DetailedHTMLProps<React.HTMLAttributes<JBSearchbarWebComponent>, JBSearchbarWebComponent> {
-      "class"?: string,
-      "type"?: string,
-      "placeholder"?:string,
-    }
-  }
-}
+import './module-declaration.js'
 
 export function JBSearchbar(props:Props) {
   const element = useRef<JBSearchbarWebComponent>(null);
