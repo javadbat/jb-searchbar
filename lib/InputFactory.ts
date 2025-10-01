@@ -1,8 +1,10 @@
 /* eslint-disable no-duplicate-imports */
 import 'jb-select';
 import 'jb-input';
+import 'jb-number-input';
 import 'jb-date-input';
 import { JBInputWebComponent } from 'jb-input';
+import { JBNumberInputWebComponent } from 'jb-number-input';
 import { JBOptionListWebComponent, JBSelectWebComponent } from 'jb-select';
 import { JBDateInputWebComponent } from 'jb-date-input';
 import {CreateInputDomArgs, SelectFieldTypeConfig} from './types';
@@ -27,12 +29,7 @@ class InputFactory {
     });
     input.addEventListener('init', () => {
       input.focus();
-      input.validation.list = [
-        {
-          validator: /.{1}/g,
-          message: 'پر کردن فیلد اجباری است'
-        },
-      ];
+      input.setAttribute('required','')
     });
     input.addEventListener('init', () => {
       input.focus();
@@ -41,11 +38,11 @@ class InputFactory {
   }
   createNumberInput(args:CreateInputDomArgs) {
     const {column,onIntentSubmitted,setIntentActive,setIntentColumnValue} = args;
-    const input = document.createElement('jb-input') as JBInputWebComponent;
+    const input = document.createElement('jb-number-input') as JBNumberInputWebComponent;
 
-    input.addEventListener('keydown', (e) => {
-      const target = e.target as JBInputWebComponent;
-      if (e.keyCode == 13 && target.value.trim() != "") {
+    input.addEventListener('enter', (e) => {
+      const target = e.target as JBNumberInputWebComponent;
+      if (target.value.trim() != "") {
         onIntentSubmitted();
       }
     });
@@ -61,16 +58,7 @@ class InputFactory {
     });
     input.addEventListener('init', () => {
       input.focus();
-      input.validation.list = [
-        {
-          validator: /.{1}/g,
-          message: 'پر کردن فیلد اجباری است'
-        },
-        {
-          validator: /^[0-9]*$/g,
-          message: 'تنها میتوانید عدد وارد نمایید'
-        },
-      ];
+      input.setAttribute('required','');
     });
     return input;
   }
