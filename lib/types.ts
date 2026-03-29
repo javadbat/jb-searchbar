@@ -1,14 +1,14 @@
-import type{ JBDateInputWebComponent } from "jb-date-input";
-import type { JBInputWebComponent } from "jb-input";
-import type { JBOptionListWebComponent, JBSelectWebComponent } from "jb-select";
 import type {EventTypeWithTarget} from 'jb-core';
 import type { JBSearchbarWebComponent } from "./jb-searchbar";
+import type {ValidationHelper} from "jb-validation";
+import type { JBExtraFilterWebComponent } from "./extra-filters/extra-filter";
 
-export type InputState = "SELECT_COLUMN" | "FILL_VALUE";
 export type JBSearchbarElements = {
-    columnSelect:JBSelectWebComponent,
-    columnSelectOptionList:JBOptionListWebComponent<FilterColumn,FilterColumn>,
+
     filterListWrapper:HTMLDivElement,
+    filterSlot:HTMLSlotElement,
+    extraFilterSlot:HTMLSlotElement,
+    extraFilters:JBExtraFilterWebComponent[]
     searchButton:{
         wrapper:HTMLDivElement,
         svg:{
@@ -16,50 +16,23 @@ export type JBSearchbarElements = {
             spinnerBox:SVGGElement,
         }
     },
-    intent:{
-        column:HTMLDivElement,
-        wrapper:HTMLDivElement,
-        input:{
-            wrapper:HTMLDivElement,
-            input: JBSelectWebComponent | JBInputWebComponent | JBDateInputWebComponent | null
-        },
-        submitButton:HTMLDivElement,
+}
 
-    }
-}
-export type FilterColumn = {
-    key: string,
-    label: string,
-    type: 'TEXT' | 'DATE' | 'SELECT' | 'NUMBER',
-    maxUsageCount?: number,
-    config?:any|SelectFieldTypeConfig,
-}
-export type IntentColumn = {
-    column:FilterColumn | null,
-    label:string | null,
-    valueString:string | null,
-    value:any | null,
-    active:boolean
-}
-export type FilterItem = {
-    column:FilterColumn,
-    value:any,
-    valueString:string,
+export type FilterItem<TValue=unknown> = {
+    name:string,
+    value:TValue,
+    displayValue:string,
     label:string,
-    dom?:HTMLDivElement
+    dom?:HTMLElement
 }
 export type SpliceArgs = [start:number,deleteCount: number, ...items: FilterItem[]]
-export type JBSearchbarValueItem = {
-    column:FilterColumn,
-    value:string
+export type JBSearchbarValueItem<TValue=unknown> = {
+    name:string,
+    label?:string
+    value:TValue,
+    displayValue?:string
 }
 export type JBSearchbarValue = JBSearchbarValueItem[];
-export type CreateInputDomArgs = {
-    onIntentSubmitted:()=>void,
-    setIntentColumnValue:(value:any,stringValue:string,label:string)=>void,
-    setIntentActive:(value:boolean, err?:string)=>void,
-    column:FilterColumn
-}
 export type SelectFieldTypeConfig<OptionType = any> = {
     optionList:OptionType[],
     getOptionTitle: (option:OptionType)=>string,
@@ -67,3 +40,12 @@ export type SelectFieldTypeConfig<OptionType = any> = {
 }
 
 export type JBSearchbarEventType<TEvent> = EventTypeWithTarget<TEvent,JBSearchbarWebComponent>
+export type JBExtraFilterEventType<TEvent> = EventTypeWithTarget<TEvent,JBExtraFilterWebComponent>
+
+//new method types
+
+export type FilterElementDom<TValue = unknown> = HTMLElement & {
+    validation:ValidationHelper<unknown>,
+    value: TValue,
+    name:string,
+}

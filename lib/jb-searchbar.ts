@@ -1,32 +1,25 @@
 import CSS from "./jb-searchbar.css";
 import VariablesCSS from "./variables.css";
-import { InputFactory } from "./InputFactory";
-import { JBOptionListWebComponent, JBSelectWebComponent } from "jb-select";
-import {
-  FilterColumn,
-  InputState,
-  IntentColumn,
+import type {
   JBSearchbarElements,
   FilterItem,
   SpliceArgs,
   JBSearchbarValue,
+  FilterElementDom
 } from "./types.js";
-import {registerDefaultVariables} from 'jb-core/theme';
-import { renderHTML } from "./render";
 
+import { registerDefaultVariables } from 'jb-core/theme';
+import { renderHTML } from "./render";
+import { createFilterDOM } from "./utils";
+import './extra-filters/extra-filter.js';
+import type { SubmitEventDetail } from "./extra-filters/types";
+import type { JBExtraFilterWebComponent } from "./extra-filters/extra-filter.js";
+import { extractLabel } from "./extra-filters/utils";
 export * from './types.js';
+export {JBExtraFilterWebComponent} from './extra-filters/extra-filter'
+export * from './extra-filters/types.js'
 export class JBSearchbarWebComponent extends HTMLElement {
   #isLoading = false;
-  #inputState: InputState = "SELECT_COLUMN";
-  #columnList: FilterColumn[] = [];
-  #inputFactory: InputFactory = new InputFactory();
-  intentColumn: IntentColumn = {
-    column: null,
-    value: null,
-    valueString: null,
-    label: null,
-    active: false,
-  };
   elements!: JBSearchbarElements;
   filterList: FilterItem[] = [];
   get isLoading() {
@@ -34,37 +27,14 @@ export class JBSearchbarWebComponent extends HTMLElement {
   }
   set isLoading(value) {
     if (!this.#isLoading && value) {
-      this.playSearchIconAnimation();
+      this.#playSearchIconAnimation();
     }
     this.#isLoading = value;
   }
-  get inputState() {
-    return this.#inputState;
-  }
-  set inputState(value: InputState) {
-    if (value == "SELECT_COLUMN") {
-      this.elements.columnSelect.value = null;
-      this.elements.intent.wrapper.classList.add("--hide");
-      if (this.elements.columnSelectOptionList.optionList.length) {
-        this.#showColumnSelect();
-        this.elements.columnSelect.focus();
-      }
-    } else if (value == "FILL_VALUE") {
-      this.elements.intent.wrapper.classList.remove("--hide");
-      this.elements.intent.input.wrapper.innerHTML = "";
-      this.elements.columnSelect.parentElement?.classList.add("--hide");
-    }
-    this.#inputState = value;
-  }
+
   get value(): JBSearchbarValue {
-    return this.filterList.map((x) => ({ column: x.column, value: x.value }));
-  }
-  get columnList() {
-    return this.#columnList;
-  }
-  set columnList(value: FilterColumn[]) {
-    //TODO: check validation of column to be array ind has necessary prop
-    this.setColumnList(value);
+    const value = this.filterList.map((x) => ({ name: x.name, label: x.label, value: x.value, displayValue:x.displayValue }));
+    return [...this.#gatherFiltersValue(),...value];
   }
   #searchOnChange = false;
   get searchOnChange() {
@@ -77,24 +47,10 @@ export class JBSearchbarWebComponent extends HTMLElement {
   }
   constructor() {
     super();
-    this.initWebComponent();
+    this.#initWebComponent();
   }
-  registerEventListener() {
-    this.elements.columnSelect.addEventListener(
-      "change",
-      this.onColumnSelected.bind(this)
-    );
-    this.elements.intent.submitButton.addEventListener(
-      "click",
-      this.onIntentSubmitted.bind(this)
-    );
-    this.elements.columnSelect.addEventListener("init", () => {
-      this.elements.columnSelect.focus();
-    });
-    this.elements.searchButton.wrapper.addEventListener(
-      "click",
-      this.search.bind(this)
-    );
+  #registerEventListener() {
+    this.elements.searchButton.wrapper.addEventListener("click", this.search.bind(this));
   }
   initProp() {
     this.filterList = this.createFilterList();
@@ -109,12 +65,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
             const domIndex = args[0];
             this.elements.filterListWrapper.children[domIndex].remove();
             setTimeout(() => {
-              if (
-                this.elements.columnSelectOptionList.optionList.length &&
-                this.inputState == "SELECT_COLUMN"
-              ) {
-                this.#showColumnSelect();
-              }
+              this.elements.extraFilters.forEach(x=>{x.setFilterListSelectOptionList()});
             }, 0);
 
             //because we apply function like this the get wont call again in proxy
@@ -128,15 +79,15 @@ export class JBSearchbarWebComponent extends HTMLElement {
       },
       set: (target, property, value: FilterItem) => {
         if (!(property == "length") && typeof property == "string") {
-          if (parseInt(property) == target.length) {
+          if (Number(property) == target.length) {
             //when push
-            const dom = this.createFilterDOM(value.valueString, value.label);
+            const dom = createFilterDOM(value.displayValue, value.label, this.filterList.length, this.deleteFilter.bind(this));
             value.dom = dom;
             this.elements.filterListWrapper.appendChild(dom);
           }
           if (
             !Number.isNaN(Number(property)) &&
-            parseInt(property) < target.length
+            Number(property) < target.length
           ) {
             //when splice
             //we do dom delete in proxy getter
@@ -150,35 +101,14 @@ export class JBSearchbarWebComponent extends HTMLElement {
     });
     return flProxy;
   }
-  createFilterDOM(label: string, columnLabel: string) {
-    const dom = document.createElement("div");
-    dom.classList.add("filter-item");
-    const deleteButtonDom = document.createElement("div");
-    deleteButtonDom.classList.add("delete-btn");
-    deleteButtonDom.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 298.667 298.667" style="enable-background:new 0 0 298.667 298.667;" xml:space="preserve"><g><polygon points="298.667,30.187 268.48,0 149.333,119.147 30.187,0 0,30.187 119.147,149.333 0,268.48 30.187,298.667     149.333,179.52 268.48,298.667 298.667,268.48 179.52,149.333   "/></g></svg>`;
-    const labelDom = document.createElement("div");
-    labelDom.classList.add("filter-label");
-    labelDom.innerHTML = `${columnLabel}: ${label}`;
-    const filterIndex = this.filterList.length;
-    dom.dataset.filterIndex = filterIndex.toString();
-    deleteButtonDom.addEventListener("click", (e) => {
-      const currentTarget = e.currentTarget as HTMLDivElement;
-      const filterIndex = parseInt(
-        currentTarget!.parentElement!.dataset.filterIndex!
-      );
-      this.deleteFilter(filterIndex);
-    });
-    dom.appendChild(deleteButtonDom);
-    dom.appendChild(labelDom);
-    return dom;
-  }
+
   deleteFilter(filterIndex: number) {
     this.filterList.splice(filterIndex, 1);
-    this.triggerOnChange();
-    this.setColumnListSelectOptionList();
+    this.#dispatchOnChange();
+    this.elements.extraFilters.forEach(x=>{x.setFilterListSelectOptionList()});
   }
   connectedCallback() {
-    // standard web component event that called when all of dom is binded
+    // standard web component event that called when all of dom is bound
     this.callOnLoadEvent();
     this.initProp();
   }
@@ -186,179 +116,50 @@ export class JBSearchbarWebComponent extends HTMLElement {
     const event = new CustomEvent("load", { bubbles: true, composed: true });
     this.dispatchEvent(event);
   }
-  initWebComponent() {
-    const shadowRoot = this.attachShadow({ mode: "open" });
+  #initWebComponent() {
+    const shadowRoot = this.attachShadow({ mode: "open",delegatesFocus:true, serializable:true });
     registerDefaultVariables();
-    const html = `<style>${CSS} ${VariablesCSS}</style>` + "\n" + renderHTML();
+    const html = `<style>${CSS} ${VariablesCSS}</style>\n${renderHTML()}`;
     const element = document.createElement("template");
     element.innerHTML = html;
     shadowRoot.appendChild(element.content.cloneNode(true));
     this.elements = {
       filterListWrapper: shadowRoot.querySelector(".filter-list-section") as HTMLDivElement,
-      searchButton: {wrapper: shadowRoot.querySelector(".search-button-wrapper") as HTMLDivElement,
+      searchButton: {
+        wrapper: shadowRoot.querySelector(".search-button-wrapper") as HTMLDivElement,
         svg: {
           spinnerLine: shadowRoot.querySelector(".search-button-wrapper .convertable-line") as SVGClipPathElement,
           spinnerBox: shadowRoot.querySelector(".search-button-wrapper .spin-line-group") as SVGGElement,
         },
       },
-      columnSelect: shadowRoot.querySelector(".column-select") as JBSelectWebComponent,
-      columnSelectOptionList: shadowRoot.querySelector("#ColumnSelectOptionList") as JBOptionListWebComponent<FilterColumn,FilterColumn>,
-      intent: {column: shadowRoot.querySelector(".intent-wrapper .intent-column") as HTMLDivElement,
-        input: {
-          wrapper: shadowRoot.querySelector(
-            ".intent-wrapper .intent-input-wrapper"
-          ) as HTMLDivElement,
-          input: null,
-        },
-        submitButton: shadowRoot.querySelector(
-          ".intent-wrapper .intent-submit-button"
-        ) as HTMLDivElement,
-        wrapper: shadowRoot.querySelector(".intent-wrapper") as HTMLDivElement,
-      },
+      extraFilterSlot: shadowRoot.querySelector(`slot[name="extra"]`),
+      filterSlot:shadowRoot.querySelector(`slot[name="filter"]`),
+      extraFilters:[]
     };
-    this.registerEventListener();
+    this.#registerEventListener();
+    this.#initExtraFilters();
   }
-  static get observedAttributes() {
-    return ["placeholder"];
+
+  #extraFiltersAbort = new AbortController();
+  #initExtraFilters(){
+    this.elements.extraFilterSlot.addEventListener("slotchange",()=>{
+      const assignedElements = this.elements.extraFilterSlot.assignedElements().filter(x=>x.tagName.toUpperCase() == "JB-EXTRA-FILTER") as JBExtraFilterWebComponent[];
+      this.elements.extraFilters = assignedElements;
+      this.#extraFiltersAbort.abort("Remove prev listeners and setup new one");
+      this.#extraFiltersAbort = new AbortController();
+      this.elements.extraFilters.forEach((ef)=>{
+        ef.addEventListener("intent-submit", this.#onIntentSubmit.bind(this), {signal:this.#extraFiltersAbort.signal});
+      })
+    })
   }
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    // do something when an attribute has changed
-    this.onAttributeChange(name, newValue);
-  }
-  onAttributeChange(name: string, value: string) {
-    switch (name) {
-      case "placeholder":
-        this.elements.columnSelect.setAttribute("placeholder", value);
-        break;
-    }
-  }
-  setColumnList(columnList: FilterColumn[]) {
-    this.#columnList = columnList;
-    this.setColumnListSelectOptionList();
-  }
-  setColumnListSelectOptionList() {
-    const currentFilterKeys = this.filterList.map((filter) => {
-      return filter.column.key;
-    });
-    if (this.columnList) {
-      const columnList = this.columnList.filter((column) => {
-        const maxUsageCount = column.maxUsageCount || 1;
-        const usedCount = currentFilterKeys.filter(
-          (key) => key == column.key
-        ).length;
-        if (usedCount >= maxUsageCount) {
-          return false;
-        }
-        return true;
-      });
-      this.elements.columnSelectOptionList.callbacks.getTitle = (column) => {
-        return column.label;
-      };
-      this.elements.columnSelectOptionList.optionList = columnList;
-    }
-  }
-  onColumnSelected(e: Event) {
-    const target = e.target as JBSelectWebComponent;
-    const column = target.value;
-    this.intentColumn.column = column;
-    this.inputState = "FILL_VALUE";
-    this.elements.intent.column.innerHTML = column.label;
-    const inputDom = this.createIntentInputDom(column);
-    this.elements.intent.input.input = inputDom;
-    this.elements.intent.input.wrapper.appendChild(inputDom);
-  }
-  createIntentInputDom(column: FilterColumn) {
-    const setIntentActive = (value: boolean, err = "") => {
-      this.intentColumn.active = value;
-      if (value) {
-        this.elements.intent.submitButton.classList.add("--active");
-        this.elements.intent.submitButton.setAttribute("title", "ثبت فیلتر");
-      } else {
-        this.elements.intent.submitButton.classList.remove("--active");
-        this.elements.intent.submitButton.setAttribute("title", err);
-      }
-    };
-    const setIntentColumnValue = (
-      value: any,
-      valueString: string,
-      label: string
-    ) => {
-      this.intentColumn.value = value;
-      this.intentColumn.label = label;
-      this.intentColumn.valueString = valueString;
-    };
-    switch (column.type) {
-      case "TEXT":
-        return this.#inputFactory.createTextInput({
-          column: column,
-          onIntentSubmitted: this.onIntentSubmitted.bind(this),
-          setIntentActive: setIntentActive,
-          setIntentColumnValue,
-        });
-      case "NUMBER":
-        return this.#inputFactory.createNumberInput({
-          column,
-          onIntentSubmitted: this.onIntentSubmitted.bind(this),
-          setIntentActive: setIntentActive,
-          setIntentColumnValue,
-        });
-      case "SELECT":
-        return this.#inputFactory.createSelectInput({
-          column,
-          onIntentSubmitted: this.onIntentSubmitted.bind(this),
-          setIntentActive: setIntentActive,
-          setIntentColumnValue,
-        });
-      case "DATE":
-        return this.#inputFactory.createDateInput({
-          column,
-          onIntentSubmitted: this.onIntentSubmitted.bind(this),
-          setIntentActive: setIntentActive,
-          setIntentColumnValue,
-        });
-    }
-  }
-  onIntentSubmitted() {
-    if (
-      this.intentColumn.column &&
-      this.intentColumn.value &&
-      this.intentColumn.valueString &&
-      this.intentColumn.label &&
-      this.intentColumn.active
-    ) {
-      this.submitIntent(
-        this.intentColumn.column,
-        this.intentColumn.value,
-        this.intentColumn.valueString,
-        this.intentColumn.label
-      );
-      this.inputState = "SELECT_COLUMN";
-      this.intentColumn = {
-        column: null,
-        value: null,
-        valueString: null,
-        label: null,
-        active: false,
-      };
-      this.elements.intent.submitButton.classList.remove("--active");
-    }
-  }
-  submitIntent(
-    column: FilterColumn,
-    value: any,
-    valueString: string,
-    label: string
-  ) {
-    this.filterList.push({
-      column,
-      valueString,
-      value,
-      label,
-    });
-    this.setColumnListSelectOptionList();
-    this.triggerOnChange();
-  }
-  playSearchIconAnimation() {
+  // static get observedAttributes() {
+  //   return [];
+  // }
+  // attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
+  // }
+
+
+  #playSearchIconAnimation() {
     const spinnerLine = this.elements.searchButton.svg.spinnerLine;
     const spinnerBox = this.elements.searchButton.svg.spinnerBox;
     const self = this;
@@ -440,7 +241,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
     ReverseCurveLineAnimation.onfinish = ReverseCurveLineFunction;
     ShrinkLineAnimation.play();
   }
-  triggerOnChange() {
+  #dispatchOnChange() {
     const event = new CustomEvent("change");
     this.dispatchEvent(event);
     if (this.searchOnChange) {
@@ -451,8 +252,32 @@ export class JBSearchbarWebComponent extends HTMLElement {
     const event = new CustomEvent("search");
     this.dispatchEvent(event);
   }
-  #showColumnSelect() {
-    this.elements.columnSelect.parentElement?.classList.remove("--hide");
+  #onIntentSubmit(e: CustomEvent<SubmitEventDetail<unknown>>) {
+    const { displayValue, label, name, value } = e.detail;
+    this.filterList.push({
+      name,
+      displayValue,
+      value,
+      label,
+    });
+    this.elements.extraFilters.forEach(x=>{x.setFilterListSelectOptionList()});
+    this.#dispatchOnChange();
+  }
+  #gatherFiltersValue(){
+    const slots = this.elements.filterSlot.assignedElements();
+    const value: JBSearchbarValue = [];
+    slots.forEach((slot)=>{
+      const namedElements = slot.querySelectorAll("[name]");
+      const formElements:FilterElementDom[] = Array.from(namedElements).filter((ne:FilterElementDom)=>ne.value !== undefined && (ne.constructor as any)?.formAssociated) as unknown as FilterElementDom[];
+      formElements.forEach((fe)=>{
+        value.push({
+          name:fe.getAttribute("name"),
+          value:fe.value,
+          label:extractLabel(fe),
+        })
+      })
+    })
+    return value;
   }
 }
 const myElementNotExists = !customElements.get("jb-searchbar");

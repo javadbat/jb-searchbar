@@ -1,32 +1,32 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useImperativeHandle, useRef, type RefObject } from 'react';
 import 'jb-searchbar';
 // eslint-disable-next-line no-duplicate-imports
-import {JBSearchbarWebComponent, FilterColumn} from 'jb-searchbar';
-import { useEvents } from './events-hook.js';
+import type { JBSearchbarWebComponent } from 'jb-searchbar';
+import { useEvents, type EventProps } from './events-hook.js';
 import './module-declaration.js'
+import type { JBElementStandardProps } from 'jb-core/react';
 
-export function JBSearchbar(props:Props) {
+export {JBExtraFilter, Props as ExtraFilterProps} from './JBExtraFilter.js'
+
+export function JBSearchbar(props: Props) {
   const element = useRef<JBSearchbarWebComponent>(null);
-  useEffect(() => {
-    element.current.columnList = props.columnList;
-  }, [element.current, props.columnList]);
+  const {  onInit, ref, children, onLoad, onSearch, ...otherProps} = props;
 
-  useEffect(() => {
-    if(element.current){
-      element.current.searchOnChange = Boolean(props.searchOnChange);
-    }
-  },[element.current, props.searchOnChange]);
-
-  useEvents(element,props);
+  useImperativeHandle(
+    ref,
+    () => (element ? element.current : undefined),
+    [element],
+  );
+  //placeholder,searchOnChange is in ...otherProps for shorter code
+  useEvents(element, { onInit, onLoad, onSearch });
 
   return (
-    <jb-searchbar placeholder={props.placeholder} ref={element}></jb-searchbar>
+    <jb-searchbar ref={element} {...otherProps}>{children}</jb-searchbar>
   );
 }
-export type Props = {
-  placeholder: string,
-  searchOnChange: boolean,
-  onSearch: (e:CustomEvent)=>void,
-  columnList:FilterColumn[],
+type SearchbarProps = EventProps & {
+  ref?: RefObject<JBSearchbarWebComponent>,
+  searchOnChange?: boolean,
 }
+export type Props = SearchbarProps & JBElementStandardProps<JBSearchbarWebComponent, keyof SearchbarProps>;

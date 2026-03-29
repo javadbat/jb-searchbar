@@ -1,15 +1,17 @@
-import type { JBSearchbarWebComponent } from "jb-searchbar";
+import type { JBSearchbarWebComponent, JBExtraFilterWebComponent, ExtractDisplayValueCallback } from "jb-searchbar";
 
 declare module "react" {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
-      'jb-searchbar': JBSearchbarType;
+      'jb-searchbar': JBSearchbarElement;
+      'jb-extra-filter': JBExtraFilterElement;
     }
-    interface JBSearchbarType extends React.DetailedHTMLProps<React.HTMLAttributes<JBSearchbarWebComponent>, JBSearchbarWebComponent> {
-      "class"?: string,
-      "type"?: string,
-      "placeholder"?:string,
+    interface JBSearchbarElement extends React.DetailedHTMLProps<React.HTMLAttributes<JBSearchbarWebComponent>, JBSearchbarWebComponent> {
+    }
+    interface JBExtraFilterElement extends React.DetailedHTMLProps<React.HTMLAttributes<JBExtraFilterWebComponent>, JBExtraFilterWebComponent> {
+      placeholder?:string,
+      extractDisplayValue:ExtractDisplayValueCallback
     }
   }
 }

@@ -17,6 +17,11 @@ import 'jb-searchbar';
 ```html
 <jb-searchbar></jb-searchbar>
 ```
+## How it works:
+
+After version 3 JBSearchbar has a Major Refactor and now it support 2 kind of filters.
+- filters: normal filters element just rendered inside a bar without any extra job.
+- extra filters: filters that hidden by default. and listed in a drop down. if user choose them they will be rendered and value collected.
 
 ## attributes
 

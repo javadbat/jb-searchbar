@@ -1,140 +1,107 @@
-.jb-searchbar-web-component{
-    width: 100%;
+.jb-searchbar-web-component {
+  width: 100%;
+  height: auto;
+  min-height: 48px;
+  display: flex;
+
+  .search-dynamic-wrapper {
+    width: calc(100% - 48px);
     height: auto;
     min-height: 48px;
-    display: flex;
-    .search-dynamic-wrapper{
-        width: calc(100% - 48px );
-        height: auto;
-        min-height: 48px;
-        display: inline-flex;
-        flex-wrap: wrap;
-        gap:0.5rem;
-        .filter-list-section{
-            display: inline-flex;
-            align-items: center;
-            flex-wrap: wrap;
-            row-gap: 8px;
-            column-gap: 8px;
-            .filter-item{
-                display: inline-flex;
-                justify-content: center;
-                align-items: center;
-                margin:0px 0px;
-                background-color: var(--filter-item-bg-color);
-                color: var(--filter-item-color);
-                border-radius: var(--filter-item-border-radius);
-                gap:0.25rem;
-                padding: 0.25rem 0.5rem;
-                .delete-btn{
-                    cursor: pointer;
-                    display: block;
-                    box-sizing: border-box;
-                    svg{
-                        fill: var(--remove-button-color);
-                        height: 0.75rem;
-                        display: block;
-                    }
-                }
-                .filter-label{
-                    display: block;
-                    box-sizing: border-box;
-                }
-            }
-        }
-        .filter-input-section{
-            --jb-select-margin: 0 0;
-            --jb-select-border-color: transparent;
-            --jb-select-border-color-selected: transparent;
-            --jb-select-bgcolor: #fff;
-            --jb-select-list-box-shadow: 0px 15px 20px -6px #d8d8d8;
-            display: inline-block;
-            .column-select-wrapper{
-                width: 240px;
-                &.--hide{
-                    display: none;
-                }
-            }
-            .intent-wrapper{
-                display: flex;
-                align-items: center;
-                .intent-input-wrapper{
-                    width: 180px;
-                    --jb-input-margin: 0 0;
-                    --jb-input-border-radius: 0px;
-                    --jb-input-border-color: transparent;
-                    --jb-input-border-color-focus: transparent;
-                    --jb-input-bgcolor: #fff;
-                    --jb-input-message-box-display:none;
-                    /* jb-select */
-                    --jb-select-margin: 0 0;
-                    --jb-select-border-color: transparent;
-                    --jb-select-border-color-selected: transparent;
-                    --jb-select-bgcolor: #fff;
-                    /* jb-date-input */
-                    --jb-date-input-margin: 0 0;
-                    --jb-date-input-border-radius: 0px;
-                    --jb-date-input-border-color: transparent;
-                    --jb-date-input-border-color-focus: transparent;
-                    --jb-date-input-bgcolor: #fff;
-                    --jb-date-input-message-box-display: none;
-                    --jb-date-input-calendar-trigger-display:none;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 
-                }
-                .intent-submit-button{
-                    width: 32px;
-                    height: 32px;
-                    float: right;
-                    padding: 4px 0 4px 0;
-                    cursor: not-allowed;
-                    &.--active{
-                        cursor: pointer;
-                        svg{
-                            fill: var(--intent-submit-button-color-active);
-                        }
-                    }
-                    svg{
-                        fill: var(--intent-submit-button-color);
-                    }
-                }
-                &.--hide{
-                    display: none;
-                }
-            }
-        }
+    slot[name="filter"]::slotted(*){
+      display: inline-grid;
+      grid-auto-columns: minmax(clamp(7.5rem, 1%, 20rem), 1fr);
+      grid-auto-flow: column;
+      gap: 0.5rem;
+      width: max-content;
+      max-width: 100%;
     }
-    .search-button-wrapper{
-        width: 48px;
-        height: auto;
-        min-height: 48px;
-        cursor: pointer;
-        svg{
-            width: 36px;
-            height: 36px;
-            margin: 4px 8px;
-            box-sizing: border-box;
-            background-color: transparent;
-            circle{
-                stroke: var(--search-button-stroke);
-                fill: var(--search-button-fill);
-                stroke-width: 25px;
-            }
-            .spin-line-group {
-                transform-origin: center;
-                fill: transparent;
-                rect {
-                    fill: transparent;
-                }
-                path {
-                    fill: none;
-                    stroke: var(--search-button-stroke);
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                    transition: 0.2s;
-                    stroke-width: 35px;
-                    transform-origin: center;
-                }
-            }
+    .filter-list-section {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      row-gap: 8px;
+      column-gap: 8px;
+
+      &:empty{
+        display: none;
+      }
+
+      .filter-item {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0px 0px;
+        background-color: var(--filter-item-bg-color);
+        color: var(--filter-item-color);
+        border-radius: var(--filter-item-border-radius);
+        gap: 0.25rem;
+        padding: 0.5rem 0.5rem;
+
+        .delete-btn {
+          cursor: pointer;
+          display: block;
+          box-sizing: border-box;
+
+          svg {
+            fill: var(--remove-button-color);
+            height: 0.75rem;
+            display: block;
+          }
         }
+
+        .filter-label {
+          display: block;
+          box-sizing: border-box;
+          text-box-trim: trim-both;
+          text-box-edge: ex alphabetic;
+        }
+      }
     }
+
+  }
+
+  .search-button-wrapper {
+    width: 3rem;
+    height: auto;
+    min-height: 3rem;
+    cursor: pointer;
+
+    svg {
+      width: 36px;
+      height: 36px;
+      margin: 4px 8px;
+      box-sizing: border-box;
+      background-color: transparent;
+
+      circle {
+        stroke: var(--search-button-stroke);
+        fill: var(--search-button-fill);
+        stroke-width: 25px;
+      }
+
+      .spin-line-group {
+        transform-origin: center;
+        fill: transparent;
+
+        rect {
+          fill: transparent;
+        }
+
+        path {
+          fill: none;
+          stroke: var(--search-button-stroke);
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          transition: 0.2s;
+          stroke-width: 35px;
+          transform-origin: center;
+        }
+      }
+    }
+  }
 }
