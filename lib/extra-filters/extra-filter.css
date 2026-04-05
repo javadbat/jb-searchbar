@@ -43,10 +43,9 @@
     }
 
     .intent-submit-button {
-      width: 2rem;
-      height: 2rem;
+      width: var(--submit-width);
+      height: var(--submit-height);
       float: right;
-      padding: 4px 0 4px 0;
       cursor: not-allowed;
 
       &.--active {

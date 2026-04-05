@@ -3,8 +3,11 @@ import type { FilterElementDom } from "../types"
 import { extractLabel } from "./utils";
 import { JBOptionListWebComponent } from "jb-select";
 import { renderHTML } from "./render";
-import ExtraCSS from './extra-filter.css';
+import CSS from './extra-filter.css';
+import VariablesCSS from './variables.css';
 import type { JBSearchbarWebComponent } from "lib/jb-searchbar";
+import { dictionary } from "./i18n";
+import { i18n } from "jb-core/i18n";
 
 export class JBExtraFilterWebComponent extends HTMLElement {
   #elements: Elements;
@@ -59,7 +62,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     super();
     const shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true, slotAssignment: "named", serializable:true });
 
-    const html = `<style>${ExtraCSS}</style>\n${renderHTML()}`;
+    const html = `<style> ${VariablesCSS} \n ${CSS}</style>\n${renderHTML()}`;
     const element = document.createElement("template");
     element.innerHTML = html;
     shadowRoot.appendChild(element.content.cloneNode(true));
@@ -148,7 +151,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       if (result.isAllValid) {
         this.intentColumn.active = true;
         this.#elements.intent.submit.classList.add("--active");
-        this.#elements.intent.submit.setAttribute("title", "ثبت فیلتر");
+        this.#elements.intent.submit.setAttribute("title", dictionary.get(i18n,"submitTitle"));
       } else {
         this.intentColumn.active = false;
         this.#elements.intent.submit.classList.remove("--active");

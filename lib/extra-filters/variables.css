@@ -1,0 +1,8 @@
+:host{
+  --submit-width: 2rem;
+  --submit-height:2rem;
+}
+:host([size="sm"]){
+  --submit-width: 1.5rem;
+  --submit-height:1.5rem;
+}

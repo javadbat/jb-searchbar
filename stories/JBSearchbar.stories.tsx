@@ -52,7 +52,42 @@ export const Normal: Story = {
     }
   }
 };
+export const Size: Story = {
+  args: {
+    children:
+      <Fragment>
+        <div slot="filter">
+          <JBInput placeholder='text filter' name="textFilter" size='sm'/>
+          <JBSelect placeholder='Option filter' name="optionFilter" size='sm'>
+            <JBOption value="1">Option 1</JBOption>
+            <JBOption value="2">Option 2</JBOption>
+            <JBOption value="3">Option 3</JBOption>
+          </JBSelect>
+        </div>
+        <JBExtraFilter size='sm' onExtractDisplayValue={(arg)=> {
+          switch(arg.name){
+            case 'extraDateFilter':
+            return (arg.dom as JBDateInputWebComponent).inputValue
+          }
+          return String(arg.value);
+          }}>
+          <JBInput name="extraTextFilter" data-label="text filter" placeholder='Simple Text Filter' size='sm' />
+          <JBInput name="extraMinimumFilter" data-label="minimum 3 " placeholder='type 3 char and more to approve' size='sm' validationList={[{
+            validator: /.{3}/g,
+            message: "you must enter 3 value"
+          }]} />
+          <JBDateInput name="extraDateFilter" data-label="date filter" placeholder='Simple Date Filter' size='sm' required/>
+        </JBExtraFilter>
+        <div slot="divider"></div>
+      </Fragment>,
 
+    onSearch: () => {
+      console.log('search happened');
+    },
+    size:'sm',
+    isLoading:true
+  },
+};
 export const RTLSample: Story = {
   args: {
     // placeholder: 'نوع فیلتر را انتخاب کنید',

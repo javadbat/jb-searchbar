@@ -2,7 +2,7 @@
 import React, { useImperativeHandle, useRef, type RefObject } from 'react';
 import 'jb-searchbar';
 // eslint-disable-next-line no-duplicate-imports
-import type {ExtractDisplayValueCallback, JBExtraFilterWebComponent } from 'jb-searchbar';
+import type {ExtractDisplayValueCallback, JBExtraFilterWebComponent, SizeVariants } from 'jb-searchbar';
 import { useExtraFilterEvents as useEvents, type ExtraFilterEventProps as EventProps } from './events-hook.js';
 import './module-declaration.js'
 import type { JBElementStandardProps } from 'jb-core/react';
@@ -16,7 +16,7 @@ export function JBExtraFilter(props: Props) {
     () => (element ? element.current : undefined),
     [element],
   );
-  //placeholder,searchOnChange is in ...otherProps for shorter code
+  //placeholder, size, searchOnChange is in ...otherProps for shorter code
   useEvents(element, { onInit, onLoad, onIntentSubmit });
 
   return (
@@ -27,5 +27,6 @@ type ExtraFilterProps = EventProps & {
   ref?: RefObject<JBExtraFilterWebComponent>,
   placeholder?: string,
   onExtractDisplayValue?:ExtractDisplayValueCallback
+  size?:SizeVariants,
 }
 export type Props = ExtraFilterProps & JBElementStandardProps<JBExtraFilterWebComponent, keyof ExtraFilterProps>;

@@ -26,7 +26,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
     return this.#isLoading;
   }
   set isLoading(value) {
-    if (!this.#isLoading && value) {
+    if (!this.#isLoading && value === true) {
       this.#playSearchIconAnimation();
     }
     this.#isLoading = value;

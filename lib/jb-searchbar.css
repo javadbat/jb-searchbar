@@ -1,13 +1,13 @@
 .jb-searchbar-web-component {
   width: 100%;
   height: auto;
-  min-height: 48px;
+  min-height: var(--min-height);
   display: flex;
 
   .search-dynamic-wrapper {
     width: calc(100% - 48px);
     height: auto;
-    min-height: 48px;
+    min-height: var(--min-height);
     display: inline-flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -62,19 +62,24 @@
         }
       }
     }
-
+    slot[name="divider"]::slotted(*){
+      width: 2px;
+      height: var(--search-button-size);
+      background-color: var(--jb-neutral-7);
+      border-radius: 2px;
+    }
   }
 
   .search-button-wrapper {
-    width: 3rem;
-    height: auto;
-    min-height: 3rem;
+    width: var(--search-button-size);
+    height: var(--search-button-size);
     cursor: pointer;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
     svg {
-      width: 36px;
-      height: 36px;
-      margin: 4px 8px;
+      height: 100%;
+      aspect-ratio: 1/1;
       box-sizing: border-box;
       background-color: transparent;
 

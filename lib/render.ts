@@ -5,6 +5,7 @@ export function renderHTML(): string {
     <div class="search-dynamic-wrapper">
         <slot name="filter"></slot>
         <section class="filter-list-section"></section>
+        <slot name="divider"></slot>
         <slot name="extra" ></slot>
     </div>
     <div class="search-button-wrapper">
