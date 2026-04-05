@@ -49,3 +49,6 @@ export type FilterElementDom<TValue = unknown> = HTMLElement & {
     value: TValue,
     name:string,
 }
+
+/* Variants */
+export type SizeVariants = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

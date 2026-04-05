@@ -156,6 +156,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
   //   return [];
   // }
   // attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
+    
   // }
 
 

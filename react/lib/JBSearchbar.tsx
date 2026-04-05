@@ -2,7 +2,7 @@
 import React, { useImperativeHandle, useRef, type RefObject } from 'react';
 import 'jb-searchbar';
 // eslint-disable-next-line no-duplicate-imports
-import type { JBSearchbarWebComponent } from 'jb-searchbar';
+import type { JBSearchbarWebComponent, SizeVariants } from 'jb-searchbar';
 import { useEvents, type EventProps } from './events-hook.js';
 import './module-declaration.js'
 import type { JBElementStandardProps } from 'jb-core/react';
@@ -28,5 +28,7 @@ export function JBSearchbar(props: Props) {
 type SearchbarProps = EventProps & {
   ref?: RefObject<JBSearchbarWebComponent>,
   searchOnChange?: boolean,
+  isLoading?:boolean,
+  size?:SizeVariants
 }
 export type Props = SearchbarProps & JBElementStandardProps<JBSearchbarWebComponent, keyof SearchbarProps>;

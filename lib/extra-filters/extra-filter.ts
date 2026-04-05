@@ -89,13 +89,15 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     });
   }
   static get observedAttributes() {
-    return ["placeholder"];
+    return ["placeholder", "size"];
   }
   attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
     switch (name) {
       case "placeholder":
         this.#elements.filterSelect.setAttribute("placeholder", newValue);
         break;
+      case "size":
+        this.#elements.filterSelect.setAttribute("size",newValue);
     }
   }
   #onIntentSubmitted() {
