@@ -179,6 +179,21 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     this.intentColumn.label = label;
     this.intentColumn.valueString = valueString;
   }
+  #handleNotDefinedWebComponents(elements:Element[]){
+    elements.forEach((element)=>{
+      if(element.tagName.includes("-")){
+        const webComponentClass = customElements.get(element.tagName.toLowerCase());
+        if(webComponentClass  == undefined){
+          customElements.whenDefined(element.tagName.toLowerCase()).then((definedConstructor)=>{
+            if((definedConstructor as any).formAssociated){
+              this.initColumnList();
+            }
+            
+          })
+        }
+      }
+    })
+  }
   //it's not observable so call update after change
   #filterList: FilterList = new Map();
   /**
@@ -187,11 +202,8 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   initColumnList() {
     const filtersNode = this.#elements.filtersSlot;
     const addToList = (nodeList: Element[]) => {
-      const formElements = nodeList.filter(
-        //TODO: use better condition to check form associated so every form element could be put here
-        (x => (x.constructor as any)?.formAssociated &&
-          (x as FilterElementDom).name
-          && (x as FilterElementDom).validation)) as FilterElementDom<unknown>[];
+      const formElements = nodeList.filter((x => ((x.constructor as any)?.formAssociated || 'form' in x) && (x as FilterElementDom).name)) as FilterElementDom<unknown>[];
+      this.#handleNotDefinedWebComponents(nodeList);
       formElements.forEach((fe) => {
         this.#filterList.set(fe.name, { dom: fe, parentDom: fe.parentElement });
       });

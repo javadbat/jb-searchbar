@@ -16,7 +16,7 @@ import type { SubmitEventDetail } from "./extra-filters/types";
 import type { JBExtraFilterWebComponent } from "./extra-filters/extra-filter.js";
 import { extractLabel } from "./extra-filters/utils";
 export * from './types.js';
-export {JBExtraFilterWebComponent} from './extra-filters/extra-filter'
+export { JBExtraFilterWebComponent } from './extra-filters/extra-filter'
 export * from './extra-filters/types.js'
 export class JBSearchbarWebComponent extends HTMLElement {
   #isLoading = false;
@@ -33,8 +33,8 @@ export class JBSearchbarWebComponent extends HTMLElement {
   }
 
   get value(): JBSearchbarValue {
-    const value = this.filterList.map((x) => ({ name: x.name, label: x.label, value: x.value, displayValue:x.displayValue }));
-    return [...this.#gatherFiltersValue(),...value];
+    const value = this.filterList.map((x) => ({ name: x.name, label: x.label, value: x.value, displayValue: x.displayValue }));
+    return [...this.#gatherFiltersValue(), ...value];
   }
   #searchOnChange = false;
   get searchOnChange() {
@@ -65,7 +65,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
             const domIndex = args[0];
             this.elements.filterListWrapper.children[domIndex].remove();
             setTimeout(() => {
-              this.elements.extraFilters.forEach(x=>{x.setFilterListSelectOptionList()});
+              this.elements.extraFilters.forEach(x => { x.setFilterListSelectOptionList() });
             }, 0);
 
             //because we apply function like this the get wont call again in proxy
@@ -105,7 +105,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
   deleteFilter(filterIndex: number) {
     this.filterList.splice(filterIndex, 1);
     this.#dispatchOnChange();
-    this.elements.extraFilters.forEach(x=>{x.setFilterListSelectOptionList()});
+    this.elements.extraFilters.forEach(x => { x.setFilterListSelectOptionList() });
   }
   connectedCallback() {
     // standard web component event that called when all of dom is bound
@@ -117,7 +117,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
     this.dispatchEvent(event);
   }
   #initWebComponent() {
-    const shadowRoot = this.attachShadow({ mode: "open",delegatesFocus:true, serializable:true });
+    const shadowRoot = this.attachShadow({ mode: "open", delegatesFocus: true, serializable: true });
     registerDefaultVariables();
     const html = `<style>${CSS} ${VariablesCSS}</style>\n${renderHTML()}`;
     const element = document.createElement("template");
@@ -133,22 +133,22 @@ export class JBSearchbarWebComponent extends HTMLElement {
         },
       },
       extraFilterSlot: shadowRoot.querySelector(`slot[name="extra"]`),
-      filterSlot:shadowRoot.querySelector(`slot[name="filter"]`),
-      extraFilters:[]
+      filterSlot: shadowRoot.querySelector(`slot[name="filter"]`),
+      extraFilters: []
     };
     this.#registerEventListener();
     this.#initExtraFilters();
   }
 
   #extraFiltersAbort = new AbortController();
-  #initExtraFilters(){
-    this.elements.extraFilterSlot.addEventListener("slotchange",()=>{
-      const assignedElements = this.elements.extraFilterSlot.assignedElements().filter(x=>x.tagName.toUpperCase() == "JB-EXTRA-FILTER") as JBExtraFilterWebComponent[];
+  #initExtraFilters() {
+    this.elements.extraFilterSlot.addEventListener("slotchange", () => {
+      const assignedElements = this.elements.extraFilterSlot.assignedElements().filter(x => x.tagName.toUpperCase() == "JB-EXTRA-FILTER") as JBExtraFilterWebComponent[];
       this.elements.extraFilters = assignedElements;
       this.#extraFiltersAbort.abort("Remove prev listeners and setup new one");
       this.#extraFiltersAbort = new AbortController();
-      this.elements.extraFilters.forEach((ef)=>{
-        ef.addEventListener("intent-submit", this.#onIntentSubmit.bind(this), {signal:this.#extraFiltersAbort.signal});
+      this.elements.extraFilters.forEach((ef) => {
+        ef.addEventListener("intent-submit", this.#onIntentSubmit.bind(this), { signal: this.#extraFiltersAbort.signal });
       })
     })
   }
@@ -156,7 +156,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
   //   return [];
   // }
   // attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
-    
+
   // }
 
 
@@ -261,20 +261,21 @@ export class JBSearchbarWebComponent extends HTMLElement {
       value,
       label,
     });
-    this.elements.extraFilters.forEach(x=>{x.setFilterListSelectOptionList()});
+    this.elements.extraFilters.forEach(x => { x.setFilterListSelectOptionList() });
     this.#dispatchOnChange();
   }
-  #gatherFiltersValue(){
+  #gatherFiltersValue() {
     const slots = this.elements.filterSlot.assignedElements();
     const value: JBSearchbarValue = [];
-    slots.forEach((slot)=>{
+    slots.forEach((slot) => {
       const namedElements = slot.querySelectorAll("[name]");
-      const formElements:FilterElementDom[] = Array.from(namedElements).filter((ne:FilterElementDom)=>ne.value !== undefined && (ne.constructor as any)?.formAssociated) as unknown as FilterElementDom[];
-      formElements.forEach((fe)=>{
+      const formElements: FilterElementDom[] = Array.from(namedElements).filter((ne: FilterElementDom) => ne.value !== undefined && ((ne.constructor as any)?.formAssociated || 'form' in ne)) as unknown as FilterElementDom[];
+
+      formElements.forEach((fe) => {
         value.push({
-          name:fe.getAttribute("name"),
-          value:fe.value,
-          label:extractLabel(fe),
+          name: fe.getAttribute("name"),
+          value: fe.value,
+          label: extractLabel(fe),
         })
       })
     })

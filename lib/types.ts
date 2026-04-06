@@ -45,7 +45,7 @@ export type JBExtraFilterEventType<TEvent> = EventTypeWithTarget<TEvent,JBExtraF
 //new method types
 
 export type FilterElementDom<TValue = unknown> = HTMLElement & {
-    validation:ValidationHelper<unknown>,
+    validation?:ValidationHelper<unknown>,
     value: TValue,
     name:string,
 }
