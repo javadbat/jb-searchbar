@@ -60,7 +60,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   }
   constructor() {
     super();
-    const shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true, slotAssignment: "named", serializable:true });
+    const shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true, slotAssignment: "named", serializable: true });
 
     const html = `<style> ${VariablesCSS} \n ${CSS}</style>\n${renderHTML()}`;
     const element = document.createElement("template");
@@ -77,7 +77,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       columnSelectOptionList: shadowRoot.querySelector("#ColumnSelectOptionList")
     }
     this.#registerEventListener();
-    this.initColumnList();
+    this.#initColumnList();
   }
   connectedCallback() {
     this.#setSearchbar();
@@ -100,7 +100,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
         this.#elements.filterSelect.setAttribute("placeholder", newValue);
         break;
       case "size":
-        this.#elements.filterSelect.setAttribute("size",newValue);
+        this.#elements.filterSelect.setAttribute("size", newValue);
     }
   }
   #onIntentSubmitted() {
@@ -151,7 +151,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       if (result.isAllValid) {
         this.intentColumn.active = true;
         this.#elements.intent.submit.classList.add("--active");
-        this.#elements.intent.submit.setAttribute("title", dictionary.get(i18n,"submitTitle"));
+        this.#elements.intent.submit.setAttribute("title", dictionary.get(i18n, "submitTitle"));
       } else {
         this.intentColumn.active = false;
         this.#elements.intent.submit.classList.remove("--active");
@@ -179,16 +179,16 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     this.intentColumn.label = label;
     this.intentColumn.valueString = valueString;
   }
-  #handleNotDefinedWebComponents(elements:Element[]){
-    elements.forEach((element)=>{
-      if(element.tagName.includes("-")){
+  #handleNotDefinedWebComponents(elements: Element[]) {
+    elements.forEach((element) => {
+      if (element.tagName.includes("-")) {
         const webComponentClass = customElements.get(element.tagName.toLowerCase());
-        if(webComponentClass  == undefined){
-          customElements.whenDefined(element.tagName.toLowerCase()).then((definedConstructor)=>{
-            if((definedConstructor as any).formAssociated){
-              this.initColumnList();
+        if (webComponentClass == undefined) {
+          customElements.whenDefined(element.tagName.toLowerCase()).then((definedConstructor) => {
+            if ((definedConstructor as any).formAssociated) {
+              this.updateSlotElements();
             }
-            
+
           })
         }
       }
@@ -196,47 +196,78 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   }
   //it's not observable so call update after change
   #filterList: FilterList = new Map();
-  /**
-   * @public need to be accessed from searchbar to update options on value change
-   */
-  initColumnList() {
-    const filtersNode = this.#elements.filtersSlot;
-    const addToList = (nodeList: Element[]) => {
-      const formElements = nodeList.filter((x => ((x.constructor as any)?.formAssociated || 'form' in x) && (x as FilterElementDom).name)) as FilterElementDom<unknown>[];
-      this.#handleNotDefinedWebComponents(nodeList);
-      formElements.forEach((fe) => {
-        this.#filterList.set(fe.name, { dom: fe, parentDom: fe.parentElement });
-      });
-    }
-    const removeFromList = (nodeList: Element[]) => {
-      const removeList = Array.from(this.#filterList).filter(x => nodeList.includes(x[1].dom));
-      removeList.forEach((item) => {
-        this.#filterList.delete(item[0]);
-      })
-
-    }
-    filtersNode.addEventListener('slotchange', (e) => {
-      const filtersElements = filtersNode.assignedElements();
-      const observer = new MutationObserver((records) => {
-        records.forEach((record) => {
-          record.removedNodes.forEach((removedNode) => {
-            if (removedNode.nodeType == 1) {
-              removeFromList([removedNode as Element])
-            }
-          })
-          record.addedNodes.forEach((addedNode) => {
-            if (addedNode.nodeType == 1) {
-              addToList([addedNode as Element])
-            }
-          })
-          this.setFilterListSelectOptionList();
-        })
-      })
-      this.#filterList.clear();
-      addToList(filtersElements);
-      this.setFilterListSelectOptionList();
-      observer.observe(filtersNode, { subtree: false, childList: true })
+  #filterElementAttributeObserver = new MutationObserver((records) => {
+    records.forEach((record) => {
+      if (record.type == "attributes" && record.attributeName == "name") {
+        if(record.oldValue == null && (record.target as FilterElementDom).name){
+          // if element get proper name attribute (due to react delay or user late update)
+          this.#addToList([record.target as FilterElementDom]);
+        }
+        //if element name change we update list base on new name
+        const value = this.#filterList.get(record.oldValue);
+        if (value) {
+          this.#filterList.delete(record.oldValue)
+          const newName = (record.target as FilterElementDom).name;
+          // when new name is empty it just mean we need to remove the element (we only accept named elements) 
+          if(newName){
+            this.#filterList.set(newName, value);
+          }
+        }
+      }
+      if (record.type == "attributes" && (record.attributeName == "label" || "data-label")) {
+        this.setFilterListSelectOptionList();
+      }
     })
+  })
+  #initColumnList() {
+    const filtersSlot = this.#elements.filtersSlot;
+    filtersSlot.addEventListener('slotchange', this.updateSlotElements.bind(this));
+    this.#filterElementAttributeObserver.observe(this, { attributeFilter: ["name", "label", "data-label"], attributeOldValue: true, childList: true, attributes: true, subtree: true, characterData: false })
+    this.updateSlotElements();
+  }
+  #removeFromList(nodeList: Element[]) {
+    const removeList = Array.from(this.#filterList).filter(x => nodeList.includes(x[1].dom));
+    removeList.forEach((item) => {
+      this.#filterList.delete(item[0]);
+    })
+
+  }
+  #addToList(nodeList: Element[]) {
+    const formElements = nodeList.filter((x => ((x.constructor as any)?.formAssociated || 'form' in x))) as FilterElementDom<unknown>[];
+    const namedElements = formElements.filter(x=>(x as FilterElementDom).name);
+    const noNamedElements = formElements.filter(x=>(x as FilterElementDom).name == '');
+    this.#handleNotDefinedWebComponents(nodeList);
+    namedElements.forEach((fe) => {
+      this.#filterList.set(fe.name, { dom: fe, parentDom: fe.parentElement });
+    });
+    //most of the time elements that exist in searchbar but have no name will be named later. here we watch for them.
+    noNamedElements.forEach(nne=>{this.#filterElementAttributeObserver.observe(nne,{attributeFilter:["name"],childList:false,subtree:false,attributes:true,attributeOldValue:true})})
+  }
+  #slotObserver = new MutationObserver((records) => {
+    records.forEach((record) => {
+      record.removedNodes.forEach((removedNode) => {
+        if (removedNode.nodeType == 1) {
+          this.#removeFromList([removedNode as Element])
+        }
+      })
+      record.addedNodes.forEach((addedNode) => {
+        if (addedNode.nodeType == 1) {
+          this.#addToList([addedNode as Element])
+        }
+      })
+      this.setFilterListSelectOptionList();
+    })
+  })
+  /**
+ * @public need to be accessed from outside for some scenario that list does not update
+ */
+  updateSlotElements() {
+    const filtersElements = this.#elements.filtersSlot.assignedElements();
+    this.#filterList.clear();
+    this.#addToList(filtersElements);
+    this.setFilterListSelectOptionList();
+    this.#slotObserver.disconnect();
+    this.#slotObserver.observe(this.#elements.filtersSlot, { subtree: false, childList: true })
   }
   setFilterListSelectOptionList() {
 
@@ -275,7 +306,10 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     this.#elements.filterSelect.parentElement?.classList.remove("--hide");
   }
 
-
+  disconnectedCallback() {
+    this.#slotObserver.disconnect();
+    this.#filterElementAttributeObserver.disconnect();
+  }
   #setSearchbar() {
     if (this.parentElement.tagName.toLowerCase() == "jb-searchbar") {
       this.#parentSearchbar = this.parentElement as JBSearchbarWebComponent

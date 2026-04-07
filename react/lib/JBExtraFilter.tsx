@@ -24,7 +24,7 @@ export function JBExtraFilter(props: Props) {
   );
 }
 type ExtraFilterProps = EventProps & {
-  ref?: RefObject<JBExtraFilterWebComponent>,
+  ref?: RefObject<JBExtraFilterWebComponent|null>,
   placeholder?: string,
   onExtractDisplayValue?:ExtractDisplayValueCallback
   size?:SizeVariants,

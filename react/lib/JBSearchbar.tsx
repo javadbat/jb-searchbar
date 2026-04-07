@@ -26,7 +26,7 @@ export function JBSearchbar(props: Props) {
   );
 }
 type SearchbarProps = EventProps & {
-  ref?: RefObject<JBSearchbarWebComponent>,
+  ref?: RefObject<JBSearchbarWebComponent|null>,
   searchOnChange?: boolean,
   isLoading?:boolean,
   size?:SizeVariants

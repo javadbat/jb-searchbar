@@ -71,7 +71,7 @@ export const Size: Story = {
           }
           return String(arg.value);
           }}>
-          <JBInput name="extraTextFilter" data-label="text filter" placeholder='Simple Text Filter' size='sm' />
+          <JBInput data-label="text filter" placeholder='Simple Text Filter' size='sm' />
           <JBInput name="extraMinimumFilter" data-label="minimum 3 " placeholder='type 3 char and more to approve' size='sm' validationList={[{
             validator: /.{3}/g,
             message: "you must enter 3 value"
