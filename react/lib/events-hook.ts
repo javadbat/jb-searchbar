@@ -32,7 +32,7 @@ export type ExtraFilterEventProps = {
   
 }
 
-export function useExtraFilterEvents(element:RefObject<JBExtraFilterWebComponent>,props:ExtraFilterEventProps){
+export function useExtraFilterEvents(element:RefObject<JBExtraFilterWebComponent|null>,props:ExtraFilterEventProps){
   useEvent(element, 'load', props.onLoad, true);
   useEvent(element, 'init', props.onInit, true);
   useEvent(element, 'intent-submit', props.onIntentSubmit);

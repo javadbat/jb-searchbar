@@ -2,18 +2,18 @@
 import React, { useImperativeHandle, useRef, type RefObject } from 'react';
 import 'jb-searchbar';
 // eslint-disable-next-line no-duplicate-imports
-import type {ExtractDisplayValueCallback, JBExtraFilterWebComponent, SizeVariants } from 'jb-searchbar';
+import type { ExtractDisplayValueCallback, JBExtraFilterWebComponent, SizeVariants } from 'jb-searchbar';
 import { useExtraFilterEvents as useEvents, type ExtraFilterEventProps as EventProps } from './events-hook.js';
 import './module-declaration.js'
 import type { JBElementStandardProps } from 'jb-core/react';
 
 export function JBExtraFilter(props: Props) {
   const element = useRef<JBExtraFilterWebComponent>(null);
-  const {  onInit, ref, children, onLoad, onIntentSubmit, onExtractDisplayValue, ...otherProps} = props;
+  const { onInit, ref, children, onLoad, onIntentSubmit, onExtractDisplayValue, ...otherProps } = props;
 
   useImperativeHandle(
     ref,
-    () => (element ? element.current : undefined),
+    () => (element?.current ?? undefined),
     [element],
   );
   //placeholder, size, searchOnChange is in ...otherProps for shorter code
@@ -24,9 +24,9 @@ export function JBExtraFilter(props: Props) {
   );
 }
 type ExtraFilterProps = EventProps & {
-  ref?: RefObject<JBExtraFilterWebComponent|null>,
+  ref?: React.ForwardedRef<JBExtraFilterWebComponent | null | undefined>,
   placeholder?: string,
-  onExtractDisplayValue?:ExtractDisplayValueCallback
-  size?:SizeVariants,
+  onExtractDisplayValue?: ExtractDisplayValueCallback
+  size?: SizeVariants,
 }
 export type Props = ExtraFilterProps & JBElementStandardProps<JBExtraFilterWebComponent, keyof ExtraFilterProps>;
