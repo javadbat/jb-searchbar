@@ -7,15 +7,15 @@ import { useEvents, type EventProps } from './events-hook.js';
 import './module-declaration.js'
 import type { JBElementStandardProps } from 'jb-core/react';
 
-export {JBExtraFilter, Props as ExtraFilterProps} from './JBExtraFilter.js'
+export { JBExtraFilter, type Props as ExtraFilterProps } from './JBExtraFilter.js'
 
 export function JBSearchbar(props: Props) {
   const element = useRef<JBSearchbarWebComponent>(null);
-  const {  onInit, ref, children, onLoad, onSearch, ...otherProps} = props;
+  const { onInit, ref, children, onLoad, onSearch, ...otherProps } = props;
 
   useImperativeHandle(
     ref,
-    () => (element ? element.current : undefined),
+    () => (element?.current ?? undefined),
     [element],
   );
   //placeholder,searchOnChange is in ...otherProps for shorter code
@@ -26,9 +26,9 @@ export function JBSearchbar(props: Props) {
   );
 }
 type SearchbarProps = EventProps & {
-  ref?: RefObject<JBSearchbarWebComponent|null>,
+  ref?: React.ForwardedRef<JBSearchbarWebComponent | undefined>,
   searchOnChange?: boolean,
-  isLoading?:boolean,
-  size?:SizeVariants
+  isLoading?: boolean,
+  size?: SizeVariants
 }
 export type Props = SearchbarProps & JBElementStandardProps<JBSearchbarWebComponent, keyof SearchbarProps>;

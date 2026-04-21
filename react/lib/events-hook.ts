@@ -13,7 +13,7 @@ export type EventProps = {
   onInit?: (e: JBSearchbarEventType<CustomEvent>) => void,
   onSearch?: (e: JBSearchbarEventType<CustomEvent>) => void,
 }
-export function useEvents(element:RefObject<JBSearchbarWebComponent>,props:EventProps){
+export function useEvents(element:RefObject<JBSearchbarWebComponent | null>,props:EventProps){
   useEvent(element, 'load', props.onLoad, true);
   useEvent(element, 'init', props.onInit, true);
   useEvent(element, 'search', props.onSearch);
