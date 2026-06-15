@@ -20,6 +20,10 @@ sample:<https://codepen.io/javadbat/pen/rNjrZpy>
 - dom base so it's easy to initiate and you dont need to pass complicated config to make it work.
 
 
+## Using with JS frameworks
+
+- [<img src="https://img.shields.io/badge/React.js-jb--searchbar%2Freact-000.svg?logo=react&logoColor=%2361DAFB" height="30" />](https://github.com/javadbat/jb-searchbar/tree/main/react)
+
 ## usage
 
 ```sh
