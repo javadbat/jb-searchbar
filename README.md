@@ -17,14 +17,24 @@ sample:<https://codepen.io/javadbat/pen/rNjrZpy>
 
 - compact and user-friendly
 
-- dom base so it's easy to initiate and you dont need to pass complicated config to make it work.
+- dom base so it's easy to initiate and you don't need to pass complicated config to make it work.
 
 
-## Using with JS frameworks
-
+## Using With JS Frameworks
 - [<img src="https://img.shields.io/badge/React.js-jb--searchbar%2Freact-000.svg?logo=react&logoColor=%2361DAFB" height="30" />](https://github.com/javadbat/jb-searchbar/tree/main/react)
 
-## usage
+## Usage
+
+## Attributes/Properties
+
+| name | type | description |
+| --- | --- | --- |
+| `label` | attribute | Visible label for a filter item. |
+| `data-label` | attribute | Alternative label when the real `label` attribute should not be used. |
+| `data-max-count` | attribute | Limits how many times a filter can be selected. |
+| `placeholder` | attribute | Placeholder text for the search input. |
+| `filterList` | property | Sets the available filter list from JavaScript. |
+| `search-on-change` | attribute | Runs search behavior when filter values change. |
 
 ```sh
 npm i jb-searchbar
@@ -72,7 +82,7 @@ Extra filter are the filters that user choose to be added to the filter bar. in 
   </jb-extra-filter>
 </jb-searchbar>
 ```
-you can use `label` attribute or `data-label` attribute if you dont want to set real label attribute of the component.    
+you can use `label` attribute or `data-label` attribute if you don't want to set real label attribute of the component.    
 
 ### data-max-count
 this attribute define how many times user can select that filter. for example you may allow them to use some extra filter only once.
@@ -107,7 +117,7 @@ you can trigger search by clicking on search button, if you want to trigger it o
 document.querySelector('jb-searchbar').searchOnChange = true;
 ```
 
-## css variables
+## CSS Variables
 | Name                                | Description                                | Default Value  |
 |-------------------------------------|--------------------------------------------|----------------|
 | --jb-searchbar-filter-item-bg-color | background color of completed filter item  | #408cff      |
