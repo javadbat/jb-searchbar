@@ -1,6 +1,11 @@
 
 # jb-searchbar
 
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/jb-searchbar)
+[![GitHub license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://raw.githubusercontent.com/javadbat/jb-searchbar/main/LICENSE)
+[![NPM Version](https://img.shields.io/npm/v/jb-searchbar)](https://www.npmjs.com/package/jb-searchbar)
+![GitHub Created At](https://img.shields.io/github/created-at/javadbat/jb-searchbar)
+
 minimalistic customizable search bar web-component for adding filter options in minimum space
 sample:<https://codepen.io/javadbat/pen/rNjrZpy>
 
