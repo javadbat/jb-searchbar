@@ -1,4 +1,3 @@
-
 # jb-searchbar
 
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/jb-searchbar)
@@ -6,35 +5,32 @@
 [![NPM Version](https://img.shields.io/npm/v/jb-searchbar)](https://www.npmjs.com/package/jb-searchbar)
 ![GitHub Created At](https://img.shields.io/github/created-at/javadbat/jb-searchbar)
 
-minimalistic customizable search bar web-component for adding filter options in minimum space
-sample:<https://codepen.io/javadbat/pen/rNjrZpy>
+`jb-searchbar` is a compact search and filter web component. It lets you render always-visible filters, optional user-selected filters, and a search button in one responsive bar.
 
-- support every form element as a filter element.
+- Supports any form-associated element as a filter.
+- Supports always-visible filters through `slot="filter"`.
+- Supports optional filters through `<jb-extra-filter slot="extra">`.
+- Lets users add the same extra filter more than once unless `data-max-count` limits it.
+- Collects normal and extra filter values through `.value`.
+- Dispatches `search` when the search button is clicked or when `searchOnChange` is enabled.
+- DOM-driven setup: define filters directly in markup instead of passing a large JavaScript configuration object.
 
-- normal filter beside extra filter.
+## When to use
 
-- you can select a filter more than once.
+Use `jb-searchbar` when a page needs a compact query/filter surface for lists, tables, reports, or dashboards.
 
-- compact and user-friendly
+Use a normal form when filters need a full-page layout, complex grouping, or submit/reset controls outside the searchbar.
 
-- dom base so it's easy to initiate and you don't need to pass complicated config to make it work.
+## Demo
 
+- [CodePen](https://codepen.io/javadbat/pen/rNjrZpy)
+- [Storybook](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar)
 
 ## Using With JS Frameworks
+
 - [<img src="https://img.shields.io/badge/React.js-jb--searchbar%2Freact-000.svg?logo=react&logoColor=%2361DAFB" height="30" />](https://github.com/javadbat/jb-searchbar/tree/main/react)
 
-## Usage
-
-## Attributes/Properties
-
-| name | type | description |
-| --- | --- | --- |
-| `label` | attribute | Visible label for a filter item. |
-| `data-label` | attribute | Alternative label when the real `label` attribute should not be used. |
-| `data-max-count` | attribute | Limits how many times a filter can be selected. |
-| `placeholder` | attribute | Placeholder text for the search input. |
-| `filterList` | property | Sets the available filter list from JavaScript. |
-| `search-on-change` | attribute | Runs search behavior when filter values change. |
+## Installation
 
 ```sh
 npm i jb-searchbar
@@ -47,78 +43,242 @@ import 'jb-searchbar';
 ```html
 <jb-searchbar></jb-searchbar>
 ```
-## How it works:
 
-After version 3 JBSearchbar has a Major Refactor and now it support 2 kind of filters.
-- filters: normal filters element just rendered inside a bar without any extra job.
-- extra filters: filters that hidden by default. and listed in a drop down. if user choose them they will be rendered and value collected.
+## How it works
 
-## filters
+`jb-searchbar` supports two filter types:
 
-Easy, just put filter dom inside filter slot:
+- Normal filters: always visible elements placed in `slot="filter"`.
+- Extra filters: hidden filter templates placed inside `<jb-extra-filter slot="extra">`. The user selects one, fills its value, and submits it into the searchbar as a removable filter chip.
+
+## API reference
+
+### jb-searchbar attributes
+
+| name | type | default | description |
+| --- | --- | --- | --- |
+| `search-on-change` | `boolean` | `false` | Runs `search()` after selected extra filters change. Empty attribute and `"true"` mean true. |
+| `size` | `'sm' \| 'md'` | `md` style defaults | Visual size variant. |
+
+### jb-searchbar properties
+
+| name | type | readonly | description |
+| --- | --- | --- | --- |
+| `value` | `JBSearchbarValue` | yes | Current normal filter values plus selected extra filters. |
+| `filterList` | `FilterItem[]` | no | Selected extra-filter chips. This is runtime state, not the available filter template list. |
+| `searchOnChange` | `boolean` | no | Runs `search()` after selected extra filters change. |
+| `isLoading` | `boolean` | no | Plays or stops the search icon loading animation. |
+
+### jb-searchbar methods
+
+| name | returns | description |
+| --- | --- | --- |
+| `search()` | `void` | Dispatches the `search` event. |
+| `deleteFilter(filterIndex)` | `void` | Removes a selected extra filter by index and dispatches `change`. |
+| `createFilterList()` | `FilterItem[]` | Creates the proxied selected-filter list used internally. |
+
+### jb-searchbar events
+
+| event | description |
+| --- | --- |
+| `load` | Dispatched from `connectedCallback` before initialization. |
+| `init` | Dispatched from `connectedCallback` after initialization. |
+| `search` | Dispatched when the search button is clicked or `search()` is called. |
+| `change` | Dispatched when a selected extra filter is added or removed. |
+
+### jb-searchbar slots
+
+| slot | description |
+| --- | --- |
+| `filter` | Always-visible filter elements. |
+| `extra` | One or more `<jb-extra-filter>` elements. |
+| `divider` | Optional divider content between normal filters and extra filters. |
+
+## Normal filters
+
+Put always-visible filter elements inside an element with `slot="filter"`. The searchbar gathers elements that have a `name` and a `value` property.
 
 ```html
 <jb-searchbar>
   <div slot="filter">
-    <jb-input name="firstName" />
-    <jb-input name="lastName" />
-    <jb-number-input name="age" />
+    <jb-input name="firstName" placeholder="First name"></jb-input>
+    <jb-input name="lastName" placeholder="Last name"></jb-input>
+    <jb-number-input name="age" placeholder="Age"></jb-number-input>
   </div>
 </jb-searchbar>
 ```
 
-## Extra filter:
+## Extra filters
 
-Extra filter are the filters that user choose to be added to the filter bar. in this type we analyze children dom of `jb-extra-filter` and extract labels and input dom from them.
+Extra filters are filter templates that the user can choose from a dropdown. Place them inside `<jb-extra-filter slot="extra">`.
 
 ```html
 <jb-searchbar>
-  <jb-extra-filter>
-    <jb-input name="firstName" label="first name" />
-    <!-- or -->
-    <jb-input name="firstName" data-label="first name" />
-    <jb-input name="lastName" data-label="last name"/>
-    <jb-number-input name="age" data-label="age"/>
+  <jb-extra-filter slot="extra" placeholder="Choose filter">
+    <jb-input name="firstName" data-label="First name"></jb-input>
+    <jb-input name="lastName" data-label="Last name"></jb-input>
+    <jb-number-input name="age" data-label="Age"></jb-number-input>
   </jb-extra-filter>
 </jb-searchbar>
 ```
-you can use `label` attribute or `data-label` attribute if you don't want to set real label attribute of the component.    
+
+Use `label` or `data-label` on each filter template. Use `data-label` when the visible input label should not be used as the selected filter label.
 
 ### data-max-count
-this attribute define how many times user can select that filter. for example you may allow them to use some extra filter only once.
+
+Use `data-max-count` on a filter template to limit how many times it can be selected.
 
 ```html
-<jb-searchbar>
-  <jb-extra-filter>
-    <jb-number-input name="age" data-label="age" data-max-count="1"/>
-  </jb-extra-filter>
-</jb-searchbar>
+<jb-extra-filter slot="extra">
+  <jb-number-input name="age" data-label="Age" data-max-count="1"></jb-number-input>
+</jb-extra-filter>
 ```
 
-### placeholder
- 
-you can set placeholder of extra filter select in extra filter `placeholder` attribute.
+## jb-extra-filter API
+
+### jb-extra-filter attributes
+
+| name | type | default | description |
+| --- | --- | --- | --- |
+| `placeholder` | `string` | localized default | Placeholder for the filter select. |
+| `size` | `'sm' \| 'md'` | `md` style defaults | Visual size forwarded to the internal select. |
+| `autofocus` | `boolean` | `false` | Focuses the internal select after it initializes when set as an empty attribute. |
+
+### jb-extra-filter properties
+
+| name | type | readonly | description |
+| --- | --- | --- | --- |
+| `inputState` | `'SELECT_COLUMN' \| 'FILL_VALUE'` | no | Current UI state. |
+| `intentColumn` | `IntentColumn` | no | Current selected filter draft before it is submitted. |
+| `extractDisplayValue` | `ExtractDisplayValueCallback` | no | Converts a filter value to the display string shown in the selected filter chip. |
+
+### jb-extra-filter methods
+
+| name | returns | description |
+| --- | --- | --- |
+| `updateSlotElements()` | `void` | Re-reads slotted filter templates and updates the select options. |
+| `setFilterListSelectOptionList()` | `void` | Updates the available option list after selected filters change. |
+
+### jb-extra-filter events
+
+| event | detail | description |
+| --- | --- | --- |
+| `load` | none | Dispatched from `connectedCallback` before parent lookup. |
+| `init` | none | Dispatched from `connectedCallback` after parent lookup. |
+| `intent-submit` | `{ name, label, displayValue, value }` | Dispatched when the user submits an extra filter value. |
+
+## Value
+
+Read `.value` from the searchbar to get normal filters and selected extra filters.
+
+```js
+const searchbar = document.querySelector('jb-searchbar');
+
+searchbar.addEventListener('search', () => {
+  console.log(searchbar.value);
+});
+```
+
+Each item contains:
+
+| field | description |
+| --- | --- |
+| `name` | Filter element name. |
+| `label` | Filter label from `label`, `data-label`, or fallback extraction. |
+| `value` | Raw filter value. |
+| `displayValue` | Display string for selected extra-filter chips. |
+
+## Search on change
 
 ```html
-
-<jb-extra-filter placeholder="please choose column"></jb-extra-filter>
-
+<jb-searchbar search-on-change></jb-searchbar>
 ```
 
-## set filter list
+```js
+const searchbar = document.querySelector('jb-searchbar');
 
-filter list is a list of your filter you want user choose filter from and set like this:
-
-## search on change
-
-you can trigger search by clicking on search button, if you want to trigger it on every change set `searchOnChange` like this:
-
-```javascript
-document.querySelector('jb-searchbar').searchOnChange = true;
+searchbar.searchOnChange = true;
 ```
 
-## CSS Variables
-| Name                                | Description                                | Default Value  |
-|-------------------------------------|--------------------------------------------|----------------|
-| --jb-searchbar-filter-item-bg-color | background color of completed filter item  | #408cff      |
-| --jb-searchbar-filter-item-color    | text color of completed filter item        | #fff         |
+## Loading state
+
+Set `isLoading` while a search request is running.
+
+```js
+const searchbar = document.querySelector('jb-searchbar');
+
+searchbar.isLoading = true;
+searchbar.isLoading = false;
+```
+
+## Display value formatting
+
+Use `extractDisplayValue` on `<jb-extra-filter>` when the raw value should be displayed differently.
+
+```js
+const extraFilter = document.querySelector('jb-extra-filter');
+
+extraFilter.extractDisplayValue = ({ name, value, dom }) => {
+  if (name === 'createdAt') {
+    return dom.inputValue;
+  }
+  return String(value);
+};
+```
+
+## CSS parts and variables
+
+### jb-searchbar parts
+
+| part | description |
+| --- | --- |
+| `dynamic-wrapper` | Wrapper around normal filters, selected extra filters, divider, and extra filter slot. |
+| `filter-list` | Selected extra-filter chip list. |
+| `search-button` | Search button wrapper. |
+
+### jb-extra-filter parts
+
+| part | description |
+| --- | --- |
+| `column-select-wrapper` | Wrapper around the filter selector. |
+| `intent-wrapper` | Wrapper shown while the user fills a selected filter value. |
+| `intent-input-wrapper` | Wrapper where the selected filter input is moved. |
+| `intent-submit-button` | Button that submits the selected extra filter value. |
+
+| CSS variable name | description |
+| --- | --- |
+| `--jb-searchbar-filter-item-bg-color` | Selected extra-filter chip background color. |
+| `--jb-searchbar-filter-item-color` | Selected extra-filter chip text color. |
+
+```css
+jb-searchbar {
+  --jb-searchbar-filter-item-bg-color: #2563eb;
+  --jb-searchbar-filter-item-color: #fff;
+}
+```
+
+## Accessibility notes
+
+- The search button is a clickable wrapper with an SVG icon. Add surrounding text or an external button if your page needs a visible text action.
+- Filter elements keep their own accessibility behavior while slotted or moved into the extra-filter intent area.
+- Extra filter templates must have `name` attributes so values can be collected.
+
+## Related Docs
+
+- See [`jb-searchbar/react`](https://github.com/javadbat/jb-searchbar/tree/main/react) if you want to use this component in React.
+- See [`jb-select`](https://github.com/javadbat/jb-select) for the internal select used by `jb-extra-filter`.
+- See [All JB Design System Component List](https://javadbat.github.io/design-system/) for more components.
+- Use [Contribution Guide](https://github.com/javadbat/design-system/blob/main/docs/contribution-guide.md) if you want to contribute to this component.
+
+## AI agent notes
+
+- Import `jb-searchbar` once before using `<jb-searchbar>` or `<jb-extra-filter>`.
+- Put always-visible filters inside an element with `slot="filter"`.
+- Put `<jb-extra-filter slot="extra">` inside `<jb-searchbar>` for optional filters.
+- Put optional filter templates as children of `<jb-extra-filter>`.
+- Use `data-label` on filter templates when the selected chip label should differ from the input label.
+- Use `data-max-count="1"` when a filter can only be selected once.
+- Read `searchbar.value` inside `search` or `change` events.
+- Use `searchOnChange` as a JavaScript property or `search-on-change` as an HTML attribute.
+- This package includes [`custom-elements.json`](./custom-elements.json) and points to it with the package.json `customElements` field. The field is documented by the Custom Elements Manifest project in [Referencing manifests from npm packages](https://github.com/webcomponents/custom-elements-manifest#referencing-manifests-from-npm-packages).
+- In `custom-elements.json`, `exports.kind: "custom-element-definition"` maps `jb-searchbar` and `jb-extra-filter` tag names to their implementation classes.

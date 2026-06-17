@@ -1,5 +1,5 @@
 'use client';
-import React, { useImperativeHandle, useRef, type RefObject } from 'react';
+import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import 'jb-searchbar';
 // eslint-disable-next-line no-duplicate-imports
 import type { JBSearchbarWebComponent, SizeVariants } from 'jb-searchbar';
@@ -11,14 +11,25 @@ export { JBExtraFilter, type Props as ExtraFilterProps } from './JBExtraFilter.j
 
 export function JBSearchbar(props: Props) {
   const element = useRef<JBSearchbarWebComponent>(null);
-  const { onInit, ref, children, onLoad, onSearch, ...otherProps } = props;
+  const { isLoading, onInit, ref, children, onLoad, onSearch, searchOnChange, ...otherProps } = props;
 
   useImperativeHandle(
     ref,
     () => (element?.current ?? undefined),
     [element],
   );
-  //placeholder,searchOnChange is in ...otherProps for shorter code
+  useEffect(() => {
+    if (element.current && typeof searchOnChange === "boolean") {
+      element.current.searchOnChange = searchOnChange;
+    }
+  }, [searchOnChange, element.current]);
+
+  useEffect(() => {
+    if (element.current && typeof isLoading === "boolean") {
+      element.current.isLoading = isLoading;
+    }
+  }, [isLoading, element.current]);
+
   useEvents(element, { onInit, onLoad, onSearch });
 
   return (

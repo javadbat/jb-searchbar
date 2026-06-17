@@ -11,7 +11,7 @@ declare module "react" {
     }
     interface JBExtraFilterElement extends React.DetailedHTMLProps<React.HTMLAttributes<JBExtraFilterWebComponent>, JBExtraFilterWebComponent> {
       placeholder?:string,
-      extractDisplayValue:ExtractDisplayValueCallback | undefined
+      extractDisplayValue?:ExtractDisplayValueCallback
     }
   }
 }

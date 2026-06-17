@@ -20,6 +20,7 @@
   "files": [
     "LICENSE",
     "README.md",
+    "custom-elements.json",
     "lib/",
     "dist/",
     "react/",
@@ -28,6 +29,7 @@
   ],
   "types": "./dist/jb-searchbar.d.ts",
   "main": "index.js",
+  "customElements": "custom-elements.json",
   "repository": {
     "type": "git",
     "url": "git@github.com:javadbat/jb-searchbar.git"

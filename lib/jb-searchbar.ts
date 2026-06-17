@@ -8,6 +8,7 @@ import type {
   FilterElementDom
 } from "./types.js";
 
+
 import { registerDefaultVariables } from 'jb-core/theme';
 import { renderHTML } from "./render";
 import { createFilterDOM } from "./utils";
@@ -41,7 +42,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
     return this.#searchOnChange;
   }
   set searchOnChange(value) {
-    if (typeof value == "boolean") {
+    if (typeof value === "boolean") {
       this.#searchOnChange = value;
     }
   }
@@ -58,7 +59,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
   createFilterList() {
     const flProxy = new Proxy<FilterItem[]>([], {
       get: (target, property, receiver) => {
-        if (property == "splice") {
+        if (property === "splice") {
           //when we remove filter
           const origMethod = target[property];
           const customSplice = (...args: SpliceArgs) => {
@@ -78,8 +79,8 @@ export class JBSearchbarWebComponent extends HTMLElement {
         return target[property];
       },
       set: (target, property, value: FilterItem) => {
-        if (!(property == "length") && typeof property == "string") {
-          if (Number(property) == target.length) {
+        if (!(property === "length") && typeof property === "string") {
+          if (Number(property) === target.length) {
             //when push
             const dom = createFilterDOM(value.displayValue, value.label, this.filterList.length, this.deleteFilter.bind(this));
             value.dom = dom;
@@ -111,9 +112,14 @@ export class JBSearchbarWebComponent extends HTMLElement {
     // standard web component event that called when all of dom is bound
     this.callOnLoadEvent();
     this.initProp();
+    this.callOnInitEvent();
   }
   callOnLoadEvent() {
     const event = new CustomEvent("load", { bubbles: true, composed: true });
+    this.dispatchEvent(event);
+  }
+  callOnInitEvent() {
+    const event = new CustomEvent("init", { bubbles: true, composed: true });
     this.dispatchEvent(event);
   }
   #initWebComponent() {
@@ -132,8 +138,8 @@ export class JBSearchbarWebComponent extends HTMLElement {
           spinnerBox: shadowRoot.querySelector(".search-button-wrapper .spin-line-group") as SVGGElement,
         },
       },
-      extraFilterSlot: shadowRoot.querySelector(`slot[name="extra"]`),
-      filterSlot: shadowRoot.querySelector(`slot[name="filter"]`),
+      extraFilterSlot: shadowRoot.querySelector(`slot[name="extra"]`)!,
+      filterSlot: shadowRoot.querySelector(`slot[name="filter"]`)!,
       extraFilters: []
     };
     this.#registerEventListener();
@@ -143,21 +149,25 @@ export class JBSearchbarWebComponent extends HTMLElement {
   #extraFiltersAbort = new AbortController();
   #initExtraFilters() {
     this.elements.extraFilterSlot.addEventListener("slotchange", () => {
-      const assignedElements = this.elements.extraFilterSlot.assignedElements().filter(x => x.tagName.toUpperCase() == "JB-EXTRA-FILTER") as JBExtraFilterWebComponent[];
+      const assignedElements = this.elements.extraFilterSlot.assignedElements().filter(x => x.tagName.toUpperCase() === "JB-EXTRA-FILTER") as JBExtraFilterWebComponent[];
       this.elements.extraFilters = assignedElements;
       this.#extraFiltersAbort.abort("Remove prev listeners and setup new one");
       this.#extraFiltersAbort = new AbortController();
       this.elements.extraFilters.forEach((ef) => {
-        ef.addEventListener("intent-submit", this.#onIntentSubmit.bind(this), { signal: this.#extraFiltersAbort.signal });
+        ef.addEventListener("intent-submit", this.#onIntentSubmit.bind(this) as EventListener, { signal: this.#extraFiltersAbort.signal });
       })
     })
   }
-  // static get observedAttributes() {
-  //   return [];
-  // }
-  // attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
-
-  // }
+  static get observedAttributes() {
+    return ["search-on-change"];
+  }
+  attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null) {
+    switch (name) {
+      case "search-on-change":
+        this.searchOnChange = newValue === "" || newValue === "true";
+        break;
+    }
+  }
 
 
   #playSearchIconAnimation() {
@@ -205,7 +215,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
     );
     spinAnimation.cancel();
     const spinFunction = function () {
-      if (self.isLoading == true) {
+      if (self.isLoading === true) {
         spinAnimation.play();
       } else {
         ReverseCurveLineAnimation.play();
@@ -257,9 +267,9 @@ export class JBSearchbarWebComponent extends HTMLElement {
     const { displayValue, label, name, value } = e.detail;
     this.filterList.push({
       name,
-      displayValue,
+      displayValue: displayValue || "",
       value,
-      label,
+      label: label || name,
     });
     this.elements.extraFilters.forEach(x => { x.setFilterListSelectOptionList() });
     this.#dispatchOnChange();
@@ -268,12 +278,12 @@ export class JBSearchbarWebComponent extends HTMLElement {
     const slots = this.elements.filterSlot.assignedElements();
     const value: JBSearchbarValue = [];
     slots.forEach((slot) => {
-      const namedElements = slot.querySelectorAll("[name]");
-      const formElements: FilterElementDom[] = Array.from(namedElements).filter((ne: FilterElementDom) => ne.value !== undefined && ((ne.constructor as any)?.formAssociated || 'form' in ne)) as unknown as FilterElementDom[];
+      const namedElements = Array.from(slot.querySelectorAll("[name]")) as FilterElementDom[];
+      const formElements: FilterElementDom[] = namedElements.filter((ne) => ne.value !== undefined && ((ne.constructor as any)?.formAssociated || 'form' in ne)) as FilterElementDom[];
 
       formElements.forEach((fe) => {
         value.push({
-          name: fe.getAttribute("name"),
+          name: fe.getAttribute("name") || fe.name,
           value: fe.value,
           label: extractLabel(fe),
         })

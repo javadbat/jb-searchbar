@@ -1,0 +1,284 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "README.md",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "lib/jb-searchbar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Compact search and filter web component with normal filters, optional extra filters, selected filter chips, and search event.",
+          "name": "JBSearchbarWebComponent",
+          "tagName": "jb-searchbar",
+          "customElement": true,
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "attributes": [
+            {
+              "name": "search-on-change",
+              "description": "Runs search() after selected extra filters change. Empty attribute and true mean true.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "name": "size",
+              "description": "Visual size variant.",
+              "type": {
+                "text": "'sm' | 'md'"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "description": "Current normal filter values plus selected extra filters.",
+              "type": {
+                "text": "JBSearchbarValue"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "filterList",
+              "description": "Selected extra-filter chips. This is runtime state, not the available filter template list.",
+              "type": {
+                "text": "FilterItem[]"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "searchOnChange",
+              "description": "Runs search() after selected extra filters change.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isLoading",
+              "description": "Plays or stops the search icon loading animation.",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "methods": [
+            {
+              "name": "search",
+              "description": "Dispatches the search event."
+            },
+            {
+              "name": "deleteFilter",
+              "description": "Removes a selected extra filter by index and dispatches change."
+            },
+            {
+              "name": "createFilterList",
+              "description": "Creates the proxied selected-filter list used internally."
+            }
+          ],
+          "events": [
+            {
+              "name": "load",
+              "description": "Dispatched from connectedCallback before initialization."
+            },
+            {
+              "name": "init",
+              "description": "Dispatched from connectedCallback after initialization."
+            },
+            {
+              "name": "search",
+              "description": "Dispatched when the search button is clicked or search() is called."
+            },
+            {
+              "name": "change",
+              "description": "Dispatched when a selected extra filter is added or removed."
+            }
+          ],
+          "slots": [
+            {
+              "name": "filter",
+              "description": "Always-visible filter elements."
+            },
+            {
+              "name": "extra",
+              "description": "One or more jb-extra-filter elements."
+            },
+            {
+              "name": "divider",
+              "description": "Optional divider content between normal filters and extra filters."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "dynamic-wrapper",
+              "description": "Wrapper around normal filters, selected extra filters, divider, and extra filter slot."
+            },
+            {
+              "name": "filter-list",
+              "description": "Selected extra-filter chip list."
+            },
+            {
+              "name": "search-button",
+              "description": "Search button wrapper."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--jb-searchbar-filter-item-bg-color",
+              "description": "Selected extra-filter chip background color."
+            },
+            {
+              "name": "--jb-searchbar-filter-item-color",
+              "description": "Selected extra-filter chip text color."
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "description": "Optional filter selector for jb-searchbar. It turns slotted form elements into selectable extra filter templates.",
+          "name": "JBExtraFilterWebComponent",
+          "tagName": "jb-extra-filter",
+          "customElement": true,
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "attributes": [
+            {
+              "name": "placeholder",
+              "description": "Placeholder for the filter select.",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "size",
+              "description": "Visual size forwarded to the internal select.",
+              "type": {
+                "text": "'sm' | 'md'"
+              }
+            },
+            {
+              "name": "autofocus",
+              "description": "Focuses the internal select after it initializes when set as an empty attribute.",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "inputState",
+              "description": "Current UI state.",
+              "type": {
+                "text": "'SELECT_COLUMN' | 'FILL_VALUE'"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "intentColumn",
+              "description": "Current selected filter draft before it is submitted.",
+              "type": {
+                "text": "IntentColumn"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "extractDisplayValue",
+              "description": "Converts a filter value to the display string shown in the selected filter chip.",
+              "type": {
+                "text": "ExtractDisplayValueCallback"
+              }
+            }
+          ],
+          "methods": [
+            {
+              "name": "updateSlotElements",
+              "description": "Re-reads slotted filter templates and updates the select options."
+            },
+            {
+              "name": "setFilterListSelectOptionList",
+              "description": "Updates the available option list after selected filters change."
+            }
+          ],
+          "events": [
+            {
+              "name": "load",
+              "description": "Dispatched from connectedCallback before parent lookup."
+            },
+            {
+              "name": "init",
+              "description": "Dispatched from connectedCallback after parent lookup."
+            },
+            {
+              "name": "intent-submit",
+              "description": "Dispatched when the user submits an extra filter value. detail contains name, label, displayValue, and value."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Filter template elements that have name and value properties."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "column-select-wrapper",
+              "description": "Wrapper around the filter selector."
+            },
+            {
+              "name": "intent-wrapper",
+              "description": "Wrapper shown while the user fills a selected filter value."
+            },
+            {
+              "name": "intent-input-wrapper",
+              "description": "Wrapper where the selected filter input is moved."
+            },
+            {
+              "name": "intent-submit-button",
+              "description": "Button that submits the selected extra filter value."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "JBSearchbarWebComponent",
+          "declaration": {
+            "name": "JBSearchbarWebComponent",
+            "module": "lib/jb-searchbar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "JBExtraFilterWebComponent",
+          "declaration": {
+            "name": "JBExtraFilterWebComponent",
+            "module": "lib/jb-searchbar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "jb-searchbar",
+          "declaration": {
+            "name": "JBSearchbarWebComponent",
+            "module": "lib/jb-searchbar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "jb-extra-filter",
+          "declaration": {
+            "name": "JBExtraFilterWebComponent",
+            "module": "lib/jb-searchbar.ts"
+          }
+        }
+      ]
+    }
+  ]
+}

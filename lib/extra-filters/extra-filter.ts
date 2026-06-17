@@ -5,13 +5,13 @@ import { JBOptionListWebComponent } from "jb-select";
 import { renderHTML } from "./render";
 import CSS from './extra-filter.css';
 import VariablesCSS from './variables.css';
-import type { JBSearchbarWebComponent } from "lib/jb-searchbar";
+import type { JBSearchbarWebComponent } from "../jb-searchbar.js";
 import { dictionary } from "./i18n";
 import { i18n } from "jb-core/i18n";
 
 export class JBExtraFilterWebComponent extends HTMLElement {
   #elements: Elements;
-  #parentSearchbar: JBSearchbarWebComponent = null;
+  #parentSearchbar: JBSearchbarWebComponent | null = null;
   #inputState: InputState = "SELECT_COLUMN";
   intentColumn: IntentColumn = {
     name: null,
@@ -21,7 +21,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     label: null,
     active: false,
   };
-  #extractDisplayValue: ExtractDisplayValueCallback | null;
+  #extractDisplayValue: ExtractDisplayValueCallback | null = null;
   /**
    * @public
    * will convert filter element value to representable string value
@@ -36,7 +36,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     }
   }
   set extractDisplayValue(value: ExtractDisplayValueCallback) {
-    if (typeof value == "function") {
+    if (typeof value === "function") {
       this.#extractDisplayValue = value;
     }
   }
@@ -44,14 +44,14 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     return this.#inputState;
   }
   set inputState(value: InputState) {
-    if (value == "SELECT_COLUMN") {
+    if (value === "SELECT_COLUMN") {
       this.#elements.filterSelect.value = null;
       this.#elements.intent.wrapper.classList.add("--hide");
       if (this.#elements.columnSelectOptionList.optionList.length) {
         this.#showColumnSelect();
         this.#elements.filterSelect.focus();
       }
-    } else if (value == "FILL_VALUE") {
+    } else if (value === "FILL_VALUE") {
       this.#elements.intent.wrapper.classList.remove("--hide");
       this.#elements.intent.inputWrapper.innerHTML = "";
       this.#elements.filterSelect.parentElement?.classList.add("--hide");
@@ -67,20 +67,30 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     element.innerHTML = html;
     shadowRoot.appendChild(element.content.cloneNode(true));
     this.#elements = {
-      filtersSlot: shadowRoot.querySelector('.filters-slot'),
+      filtersSlot: shadowRoot.querySelector('.filters-slot')!,
       intent: {
-        wrapper: shadowRoot.querySelector('.intent-wrapper'),
-        inputWrapper: shadowRoot.querySelector('.intent-input-wrapper'),
-        submit: shadowRoot.querySelector('.intent-submit-button'),
+        wrapper: shadowRoot.querySelector('.intent-wrapper')!,
+        inputWrapper: shadowRoot.querySelector('.intent-input-wrapper')!,
+        submit: shadowRoot.querySelector('.intent-submit-button')!,
       },
-      filterSelect: shadowRoot.querySelector('.filter-select'),
-      columnSelectOptionList: shadowRoot.querySelector("#ColumnSelectOptionList")
+      filterSelect: shadowRoot.querySelector('.filter-select')!,
+      columnSelectOptionList: shadowRoot.querySelector("#ColumnSelectOptionList")!
     }
     this.#registerEventListener();
     this.#initColumnList();
   }
   connectedCallback() {
+    this.callOnLoadEvent();
     this.#setSearchbar();
+    this.callOnInitEvent();
+  }
+  callOnLoadEvent() {
+    const event = new CustomEvent("load", { bubbles: true, composed: true });
+    this.dispatchEvent(event);
+  }
+  callOnInitEvent() {
+    const event = new CustomEvent("init", { bubbles: true, composed: true });
+    this.dispatchEvent(event);
   }
   #registerEventListener() {
     this.#elements.filterSelect.addEventListener("change", this.#onFilterSelected.bind(this));
@@ -106,9 +116,11 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   #onIntentSubmitted() {
     if (
       this.intentColumn.filterItem &&
-      this.intentColumn.value &&
-      this.intentColumn.valueString &&
-      this.intentColumn.label &&
+      this.intentColumn.name &&
+      this.intentColumn.value !== null &&
+      this.intentColumn.value !== undefined &&
+      this.intentColumn.valueString !== null &&
+      this.intentColumn.label !== null &&
       this.intentColumn.active
     ) {
       this.#submitIntent();
@@ -126,7 +138,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     }
   }
   #submitIntent() {
-    const name = this.intentColumn.name;
+    const name = this.intentColumn.name!;
     const value = this.intentColumn.value;
     const displayValue = this.intentColumn.valueString;
     const label = this.intentColumn.label;
@@ -140,14 +152,18 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   }
   #onFilterSelected() {
     const filter = this.#elements.filterSelect.value
+    if (!filter) return;
+    const filterItem = this.#filterList.get(filter.key);
+    if (!filterItem) return;
     this.intentColumn.name = filter.key;
-    this.intentColumn.filterItem = this.#filterList.get(filter.key);
+    this.intentColumn.filterItem = filterItem;
     this.inputState = "FILL_VALUE";
-    const inputDom = this.#filterList.get(filter.key).dom
+    const inputDom = filterItem.dom
     this.#elements.intent.input = inputDom;
     this.#elements.intent.inputWrapper.appendChild(inputDom);
     const updateIntentValidity = async (showError: boolean) => {
-      const result = await this.#elements.intent.input.validation.checkValidity({ showError: showError });
+      const input = this.#elements.intent.input;
+      const result = input?.validation ? await input.validation.checkValidity({ showError: showError }) : { isAllValid: true };
       if (result.isAllValid) {
         this.intentColumn.active = true;
         this.#elements.intent.submit.classList.add("--active");
@@ -155,10 +171,10 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       } else {
         this.intentColumn.active = false;
         this.#elements.intent.submit.classList.remove("--active");
-        this.#elements.intent.submit.setAttribute("title", this.#elements.intent.input.validation.resultSummary.message);
+        this.#elements.intent.submit.setAttribute("title", input?.validation?.resultSummary.message || "");
       }
     }
-    const updateIntentValue = () => { this.#setIntentValue(this.#elements.intent.input.value, this.extractDisplayValue({ value: inputDom.value, name: filter.key, dom: inputDom }), extractLabel(inputDom)) }
+    const updateIntentValue = () => { this.#setIntentValue(inputDom.value, this.extractDisplayValue({ value: inputDom.value, name: filter.key, dom: inputDom }), extractLabel(inputDom)) }
     updateIntentValidity(false);
     // add event listeners
     inputDom.addEventListener("change", async () => {
@@ -183,7 +199,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     elements.forEach((element) => {
       if (element.tagName.includes("-")) {
         const webComponentClass = customElements.get(element.tagName.toLowerCase());
-        if (webComponentClass == undefined) {
+        if (webComponentClass === undefined) {
           customElements.whenDefined(element.tagName.toLowerCase()).then((definedConstructor) => {
             if ((definedConstructor as any).formAssociated) {
               this.updateSlotElements();
@@ -198,12 +214,13 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   #filterList: FilterList = new Map();
   #filterElementAttributeObserver = new MutationObserver((records) => {
     records.forEach((record) => {
-      if (record.type == "attributes" && record.attributeName == "name") {
-        if(record.oldValue == null && (record.target as FilterElementDom).name){
+      if (record.type === "attributes" && record.attributeName === "name") {
+        if(record.oldValue === null && (record.target as FilterElementDom).name){
           // if element get proper name attribute (due to react delay or user late update)
           this.#addToList([record.target as FilterElementDom]);
         }
         //if element name change we update list base on new name
+        if (record.oldValue === null) return;
         const value = this.#filterList.get(record.oldValue);
         if (value) {
           this.#filterList.delete(record.oldValue)
@@ -214,7 +231,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
           }
         }
       }
-      if (record.type == "attributes" && (record.attributeName == "label" || "data-label")) {
+      if (record.type === "attributes" && (record.attributeName === "label" || record.attributeName === "data-label")) {
         this.setFilterListSelectOptionList();
       }
     })
@@ -235,10 +252,12 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   #addToList(nodeList: Element[]) {
     const formElements = nodeList.filter((x => ((x.constructor as any)?.formAssociated || 'form' in x))) as FilterElementDom<unknown>[];
     const namedElements = formElements.filter(x=>(x as FilterElementDom).name);
-    const noNamedElements = formElements.filter(x=>(x as FilterElementDom).name == '');
+    const noNamedElements = formElements.filter(x=>(x as FilterElementDom).name === '');
     this.#handleNotDefinedWebComponents(nodeList);
     namedElements.forEach((fe) => {
-      this.#filterList.set(fe.name, { dom: fe, parentDom: fe.parentElement });
+      if (fe.parentElement) {
+        this.#filterList.set(fe.name, { dom: fe, parentDom: fe.parentElement });
+      }
     });
     //most of the time elements that exist in searchbar but have no name will be named later. here we watch for them.
     noNamedElements.forEach(nne=>{this.#filterElementAttributeObserver.observe(nne,{attributeFilter:["name"],childList:false,subtree:false,attributes:true,attributeOldValue:true})})
@@ -246,12 +265,12 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   #slotObserver = new MutationObserver((records) => {
     records.forEach((record) => {
       record.removedNodes.forEach((removedNode) => {
-        if (removedNode.nodeType == 1) {
+        if (removedNode.nodeType === 1) {
           this.#removeFromList([removedNode as Element])
         }
       })
       record.addedNodes.forEach((addedNode) => {
-        if (addedNode.nodeType == 1) {
+        if (addedNode.nodeType === 1) {
           this.#addToList([addedNode as Element])
         }
       })
@@ -279,7 +298,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       // check for max usage count
       const maxCount = filter.dom.dataset.maxCount ? Number(filter.dom.dataset.maxCount) : null;
       if (this.#parentSearchbar && maxCount) {
-        const usedCount = this.#parentSearchbar.value.reduce((acc, x) => {
+        const usedCount = this.#parentSearchbar.value.reduce((acc: number, x) => {
           return x.name === key ? acc + 1 : acc;
         }, 0);
         if (maxCount <= usedCount) continue;
@@ -311,7 +330,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     this.#filterElementAttributeObserver.disconnect();
   }
   #setSearchbar() {
-    if (this.parentElement.tagName.toLowerCase() == "jb-searchbar") {
+    if (this.parentElement?.tagName.toLowerCase() === "jb-searchbar") {
       this.#parentSearchbar = this.parentElement as JBSearchbarWebComponent
     }
   }
