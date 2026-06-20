@@ -1,0 +1,18 @@
+import {Meta, Title, Story, Controls, Stories, Source} from '@storybook/blocks';
+import * as SearchbarStories from './JBSearchbar.stories';
+
+<Meta of={SearchbarStories}/>
+
+<Title>JB Searchbar</Title>
+
+Searchbar component with normal filters, extra filters, search events, and display value extraction.
+
+<Story of={SearchbarStories.Normal}/>
+<Controls of={SearchbarStories.Normal}/>
+<Source of={SearchbarStories.Normal}/>
+
+## Search on change
+<Story of={SearchbarStories.SearchOnChange}/>
+
+## Other samples & variants
+<Stories/>
