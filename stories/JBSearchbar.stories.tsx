@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { JBExtraFilter, JBSearchbar, Props } from 'jb-searchbar/react';
+import { JBExtraFilter, JBSearchbar } from 'jb-searchbar/react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { JBInput } from 'jb-input/react';
 import { JBButton } from 'jb-button/react';
@@ -8,12 +8,12 @@ import { JBDateInput } from 'jb-date-input/react';
 import { JBOption, JBSelect } from 'jb-select/react';
 import { JBSwitch } from 'jb-switch/react';
 import type { JBDateInputWebComponent } from 'jb-date-input';
-const meta: Meta<Props> = {
+const meta = {
   title: "Components/JBSearchbar",
   component: JBSearchbar,
-};
+} satisfies Meta<typeof JBSearchbar>;
 export default meta;
-type Story = StoryObj<typeof JBSearchbar>;
+type Story = StoryObj<typeof meta>;
 
 export const Normal: Story = {
 
