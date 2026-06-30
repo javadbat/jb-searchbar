@@ -6,7 +6,6 @@ import { JBButton } from 'jb-button/react';
 import { JBNumberInput } from 'jb-number-input/react';
 import { JBDateInput } from 'jb-date-input/react';
 import { JBOption, JBSelect } from 'jb-select/react';
-import { JBSwitch } from 'jb-switch/react';
 import type { JBDateInputWebComponent } from 'jb-date-input';
 const meta = {
   title: "Components/JBSearchbar",
@@ -32,7 +31,7 @@ export const Normal: Story = {
         <JBExtraFilter onExtractDisplayValue={(arg)=> {
           switch(arg.name){
             case 'extraDateFilter':
-            return (arg.dom as JBDateInputWebComponent).inputValue
+            return (arg.dom as unknown as JBDateInputWebComponent).inputValue
           }
           return String(arg.value);
           }}>
@@ -67,7 +66,7 @@ export const Size: Story = {
         <JBExtraFilter size='sm' onExtractDisplayValue={(arg)=> {
           switch(arg.name){
             case 'extraDateFilter':
-            return (arg.dom as JBDateInputWebComponent).inputValue
+            return (arg.dom as unknown as JBDateInputWebComponent).inputValue
           }
           return String(arg.value);
           }}>
