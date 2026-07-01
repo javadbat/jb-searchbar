@@ -171,7 +171,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       } else {
         this.intentColumn.active = false;
         this.#elements.intent.submit.classList.remove("--active");
-        this.#elements.intent.submit.setAttribute("title", input?.validation?.resultSummary.message || "");
+        this.#elements.intent.submit.setAttribute("title", input?.validation?.resultSummary?.message || "");
       }
     }
     const updateIntentValue = () => { this.#setIntentValue(inputDom.value, this.extractDisplayValue({ value: inputDom.value, name: filter.key, dom: inputDom }), extractLabel(inputDom)) }
