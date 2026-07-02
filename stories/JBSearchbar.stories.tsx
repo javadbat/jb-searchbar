@@ -7,6 +7,17 @@ import { JBNumberInput } from 'jb-number-input/react';
 import { JBDateInput } from 'jb-date-input/react';
 import { JBOption, JBSelect } from 'jb-select/react';
 import type { JBDateInputWebComponent } from 'jb-date-input';
+import { expect, userEvent, waitFor } from 'storybook/test';
+import {
+  chooseExtraFilter,
+  fillIntentInput,
+  getExtraFilter,
+  getFilterChip,
+  getIntentInput,
+  getIntentSubmitButton,
+  getSearchbar,
+  waitForExtraFilterOptions,
+} from './test-utils';
 const meta = {
   title: "Components/JBSearchbar",
   component: JBSearchbar,
@@ -49,6 +60,51 @@ export const Normal: Story = {
     onSearch: () => {
       console.log('search happened');
     }
+  },
+  play: async ({ canvasElement }) => {
+    const searchbar = getSearchbar(canvasElement);
+    const extraFilter = getExtraFilter(canvasElement);
+
+    await waitForExtraFilterOptions(extraFilter, [
+      'extraTextFilter',
+      'extraNumberFilter',
+      'extraMinimumFilter',
+      'extraDateFilter',
+      'extraOneTime',
+    ]);
+
+    chooseExtraFilter(extraFilter, 'extraMinimumFilter');
+
+    await waitFor(() => {
+      expect(extraFilter.inputState).toBe('FILL_VALUE');
+      expect(getIntentInput(extraFilter, 'jb-input[name="extraMinimumFilter"]')).toBeTruthy();
+      expect(getIntentSubmitButton(extraFilter).classList.contains('--active')).toBe(false);
+    });
+
+    await fillIntentInput(extraFilter, 'jb-input[name="extraMinimumFilter"]', 'ab');
+
+    await waitFor(() => {
+      expect(getIntentSubmitButton(extraFilter).classList.contains('--active')).toBe(false);
+    });
+
+    await fillIntentInput(extraFilter, 'jb-input[name="extraMinimumFilter"]', 'c', 'abc');
+
+    await waitFor(() => {
+      expect(getIntentSubmitButton(extraFilter).classList.contains('--active')).toBe(true);
+    });
+
+    await userEvent.click(getIntentSubmitButton(extraFilter));
+
+    await waitFor(() => {
+      expect(extraFilter.inputState).toBe('SELECT_COLUMN');
+      expect(searchbar.value).toContainEqual({
+        name: 'extraMinimumFilter',
+        label: 'minimum 3 ',
+        value: 'abc',
+        displayValue: 'abc',
+      });
+      expect(getFilterChip(searchbar).textContent).toContain('minimum 3 : abc');
+    });
   }
 };
 export const Size: Story = {
@@ -125,6 +181,24 @@ export const ChangeExtraFields: Story = {
         </div>
       </div>
     )
-
   },
+  play: async ({ canvasElement }) => {
+    const extraFilter = getExtraFilter(canvasElement);
+    const buttons = Array.from(canvasElement.querySelectorAll('jb-button'));
+    const addAgeButton = buttons.find((button) => button.textContent?.includes('Add Age Filter'));
+    const hideAgeButton = buttons.find((button) => button.textContent?.includes('Hide Age Filter'));
+
+    expect(addAgeButton).toBeTruthy();
+    expect(hideAgeButton).toBeTruthy();
+
+    await waitForExtraFilterOptions(extraFilter, ['name']);
+
+    await userEvent.click(addAgeButton!);
+
+    await waitForExtraFilterOptions(extraFilter, ['name', 'age']);
+
+    await userEvent.click(hideAgeButton!);
+
+    await waitForExtraFilterOptions(extraFilter, ['name']);
+  }
 }
