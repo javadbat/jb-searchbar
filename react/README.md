@@ -21,6 +21,10 @@ npm i jb-searchbar
 import { JBSearchbar, JBExtraFilter } from 'jb-searchbar/react';
 ```
 
+## When to use
+
+Use `JBSearchbar` when a React view needs a compact filter area that can collect normal filters, optional extra filters, display selected filter chips, and dispatch one search value object.
+
 ## Basic usage
 
 ```jsx
@@ -30,6 +34,10 @@ import { JBSearchbar, JBExtraFilter } from 'jb-searchbar/react';
   </div>
 </JBSearchbar>
 ```
+
+## How it works
+
+Normal filters go in the `filter` slot. Optional filters go in `JBExtraFilter`, which renders in the `extra` slot. When search runs, the web component traverses named child inputs and exposes the collected object on `event.target.value`.
 
 ## Props
 
@@ -78,6 +86,10 @@ import { JBSearchbar, JBExtraFilter } from 'jb-searchbar/react';
   </JBExtraFilter>
 </JBSearchbar>
 ```
+
+## jb-extra-filter API
+
+`JBExtraFilter` wraps the underlying `jb-extra-filter` web component. Use `placeholder`, `size`, `onIntentSubmit`, and `onExtractDisplayValue` from React, and put named filter input templates inside it.
 
 ## Display value formatting
 
@@ -128,6 +140,18 @@ The React components use the same CSS variables and parts as the web components.
 ```jsx
 <JBSearchbar className="report-searchbar" />
 ```
+
+## Value
+
+Read `event.target.value` in `onSearch`. The value is an object keyed by each named filter. Extra filters are included after the user submits them through `JBExtraFilter`.
+
+## CSS parts and variables
+
+The React components expose the same CSS parts and variables as `jb-searchbar` and `jb-extra-filter`.
+
+## Accessibility notes
+
+Give each child filter input a clear label, placeholder, or `data-label`. Extra filter chips should have display values that are meaningful without relying only on visual context.
 
 ## Shared Documentation
 
