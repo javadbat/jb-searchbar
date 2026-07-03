@@ -5,7 +5,7 @@
   display: flex;
 
   .search-dynamic-wrapper {
-    width: calc(100% - 48px);
+    width: calc(100% - 3rem);
     height: auto;
     min-height: var(--min-height);
     display: inline-flex;
@@ -24,8 +24,8 @@
       display: inline-flex;
       align-items: center;
       flex-wrap: wrap;
-      row-gap: 8px;
-      column-gap: 8px;
+      row-gap: 0.5rem;
+      column-gap: 0.5rem;
 
       &:empty{
         display: none;
@@ -86,7 +86,7 @@
       circle {
         stroke: var(--search-button-stroke);
         fill: var(--search-button-fill);
-        stroke-width: 25px;
+        stroke-width: 1.5625rem;
       }
 
       .spin-line-group {
@@ -103,7 +103,7 @@
           stroke-linecap: round;
           stroke-linejoin: round;
           transition: 0.2s;
-          stroke-width: 35px;
+          stroke-width: 2.1875rem;
           transform-origin: center;
         }
       }
