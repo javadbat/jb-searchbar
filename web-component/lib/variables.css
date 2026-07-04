@@ -10,12 +10,12 @@
   --search-button-fill: var(--jb-white);
   --divider-bg-color: var(--jb-searchbar-divider-bg-color, var(--jb-neutral-7));
   /* Size */
-  --filter-item-border-radius: 3rem;
-  --min-height: 3rem;
-  --search-button-size: 2.25rem;
+  --filter-item-border-radius: var(--jb-searchbar-filter-item-border-radius, 3rem);
+  --min-height: var(--jb-searchbar-min-height, 3rem);
+  --search-button-size: var(--jb-searchbar-search-button-size, 2.25rem);
 }
 /* Size */
 :host([size="sm"]){
-  --min-height: 2rem;
-  --search-button-size: 2rem;
+  --min-height: var(--jb-searchbar-min-height-sm, 2rem);
+  --search-button-size: var(--jb-searchbar-search-button-size-sm, 2rem);
 }

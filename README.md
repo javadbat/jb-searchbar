@@ -249,7 +249,16 @@ extraFilter.extractDisplayValue = ({ name, value, dom }) => {
 | --- | --- |
 | `--jb-searchbar-divider-bg-color` | Divider background color. |
 | `--jb-searchbar-filter-item-bg-color` | Selected extra-filter chip background color. |
+| `--jb-searchbar-filter-item-border-radius` | Selected extra-filter chip border radius. |
 | `--jb-searchbar-filter-item-color` | Selected extra-filter chip text color. |
+| `--jb-searchbar-min-height` | Base searchbar minimum height. |
+| `--jb-searchbar-min-height-sm` | Searchbar minimum height for `size="sm"`. |
+| `--jb-searchbar-search-button-size` | Base search button size. |
+| `--jb-searchbar-search-button-size-sm` | Search button size for `size="sm"`. |
+| `--jb-extra-filter-submit-height` | Extra filter submit button height. |
+| `--jb-extra-filter-submit-height-sm` | Extra filter submit button height for `size="sm"`. |
+| `--jb-extra-filter-submit-width` | Extra filter submit button width. |
+| `--jb-extra-filter-submit-width-sm` | Extra filter submit button width for `size="sm"`. |
 
 ```css
 jb-searchbar {

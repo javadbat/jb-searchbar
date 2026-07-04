@@ -1,8 +1,8 @@
 :host{
-  --submit-width: 2rem;
-  --submit-height:2rem;
+  --submit-width: var(--jb-extra-filter-submit-width, 2rem);
+  --submit-height: var(--jb-extra-filter-submit-height, 2rem);
 }
 :host([size="sm"]){
-  --submit-width: 1.5rem;
-  --submit-height:1.5rem;
+  --submit-width: var(--jb-extra-filter-submit-width-sm, 1.5rem);
+  --submit-height: var(--jb-extra-filter-submit-height-sm, 1.5rem);
 }
