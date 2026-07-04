@@ -1,1 +1,1 @@
-export * from './dist/jb-searchbar.js';
+export * from './web-component/dist/jb-searchbar.js';
