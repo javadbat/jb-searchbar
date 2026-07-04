@@ -8,6 +8,7 @@
   --intent-submit-button-color-active: var(--jb-green);
   --search-button-stroke: var(--jb-neutral-7);
   --search-button-fill: var(--jb-white);
+  --divider-bg-color: var(--jb-searchbar-divider-bg-color, var(--jb-neutral-7));
   /* Size */
   --filter-item-border-radius: 3rem;
   --min-height: 3rem;

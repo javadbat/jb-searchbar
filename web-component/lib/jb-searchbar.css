@@ -65,7 +65,7 @@
     slot[name="divider"]::slotted(*){
       width: 2px;
       height: var(--search-button-size);
-      background-color: var(--jb-neutral-7);
+      background-color: var(--divider-bg-color);
       border-radius: 2px;
     }
   }

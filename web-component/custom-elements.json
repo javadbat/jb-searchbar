@@ -128,6 +128,10 @@
           ],
           "cssProperties": [
             {
+              "name": "--jb-searchbar-divider-bg-color",
+              "description": "Divider background color."
+            },
+            {
               "name": "--jb-searchbar-filter-item-bg-color",
               "description": "Selected extra-filter chip background color."
             },

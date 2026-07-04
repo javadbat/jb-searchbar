@@ -247,6 +247,7 @@ extraFilter.extractDisplayValue = ({ name, value, dom }) => {
 
 | CSS variable name | description |
 | --- | --- |
+| `--jb-searchbar-divider-bg-color` | Divider background color. |
 | `--jb-searchbar-filter-item-bg-color` | Selected extra-filter chip background color. |
 | `--jb-searchbar-filter-item-color` | Selected extra-filter chip text color. |
 
