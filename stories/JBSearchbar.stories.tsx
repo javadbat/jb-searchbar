@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { JBExtraFilter, JBSearchbar } from 'jb-searchbar/react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { JBInput } from 'jb-input/react';
 import { JBButton } from 'jb-button/react';
 import { JBNumberInput } from 'jb-number-input/react';
