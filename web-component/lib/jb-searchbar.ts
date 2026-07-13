@@ -16,10 +16,13 @@ import './extra-filters/extra-filter.js';
 import type { SubmitEventDetail } from "./extra-filters/types";
 import type { JBExtraFilterWebComponent } from "./extra-filters/extra-filter.js";
 import { extractLabel } from "./extra-filters/utils";
+import { i18n } from "jb-core/i18n";
+import { dictionary } from "./i18n";
 export * from './types.js';
 export { JBExtraFilterWebComponent } from './extra-filters/extra-filter'
 export * from './extra-filters/types.js'
 export class JBSearchbarWebComponent extends HTMLElement {
+  #internals?: ElementInternals;
   #isLoading = false;
   elements!: JBSearchbarElements;
   filterList: FilterItem[] = [];
@@ -31,6 +34,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
       this.#playSearchIconAnimation();
     }
     this.#isLoading = value;
+    this.elements.searchButton.wrapper.setAttribute("aria-busy", value ? "true" : "false");
   }
 
   get value(): JBSearchbarValue {
@@ -48,6 +52,11 @@ export class JBSearchbarWebComponent extends HTMLElement {
   }
   constructor() {
     super();
+    if (typeof this.attachInternals === "function") {
+      this.#internals = this.attachInternals();
+      this.#internals.role = "search";
+      this.#internals.ariaLabel = dictionary.get(i18n, "search");
+    }
     this.#initWebComponent();
   }
   #registerEventListener() {
