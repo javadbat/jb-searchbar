@@ -141,7 +141,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
     this.elements = {
       filterListWrapper: shadowRoot.querySelector(".filter-list-section") as HTMLDivElement,
       searchButton: {
-        wrapper: shadowRoot.querySelector(".search-button-wrapper") as HTMLDivElement,
+        wrapper: shadowRoot.querySelector(".search-button-wrapper") as HTMLButtonElement,
         svg: {
           spinnerLine: shadowRoot.querySelector(".search-button-wrapper .convertable-line") as SVGClipPathElement,
           spinnerBox: shadowRoot.querySelector(".search-button-wrapper .spin-line-group") as SVGGElement,

@@ -43,6 +43,13 @@
     }
 
     .intent-submit-button {
+      all: unset;
+      box-sizing: border-box;
+
+      &:focus-visible {
+        outline: 2px solid var(--jb-searchbar-focus-ring-color, Highlight);
+        outline-offset: 2px;
+      }
       width: var(--submit-width);
       height: var(--submit-height);
       float: right;

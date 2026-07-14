@@ -135,6 +135,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
         active: false,
       };
       this.#elements.intent.submit.classList.remove("--active");
+      this.#elements.intent.submit.disabled = true;
     }
   }
   #submitIntent() {
@@ -167,10 +168,12 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       if (result.isAllValid) {
         this.intentColumn.active = true;
         this.#elements.intent.submit.classList.add("--active");
+        this.#elements.intent.submit.disabled = false;
         this.#elements.intent.submit.setAttribute("title", dictionary.get(i18n, "submitTitle"));
       } else {
         this.intentColumn.active = false;
         this.#elements.intent.submit.classList.remove("--active");
+        this.#elements.intent.submit.disabled = true;
         this.#elements.intent.submit.setAttribute("title", input?.validation?.resultSummary?.message || "");
       }
     }

@@ -10,7 +10,7 @@ export type JBSearchbarElements = {
     extraFilterSlot:HTMLSlotElement,
     extraFilters:JBExtraFilterWebComponent[]
     searchButton:{
-        wrapper:HTMLDivElement,
+        wrapper:HTMLButtonElement,
         svg:{
             spinnerLine:SVGClipPathElement,
             spinnerBox:SVGGElement,

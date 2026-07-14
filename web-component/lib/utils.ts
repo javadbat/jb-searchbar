@@ -1,7 +1,12 @@
+import { i18n } from "jb-core/i18n";
+import { dictionary } from "./i18n";
+
 export function createFilterDOM(label: string, columnLabel: string, filterIndex: number, deleteFilter: (index: number) => void) {
   const dom = document.createElement("div");
   dom.classList.add("filter-item");
-  const deleteButtonDom = document.createElement("div");
+  const deleteButtonDom = document.createElement("button");
+  deleteButtonDom.type = "button";
+  deleteButtonDom.setAttribute("aria-label", dictionary.get(i18n, "deleteFilter"));
   deleteButtonDom.classList.add("delete-btn");
   deleteButtonDom.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 298.667 298.667" style="enable-background:new 0 0 298.667 298.667;" xml:space="preserve"><g><polygon points="298.667,30.187 268.48,0 149.333,119.147 30.187,0 0,30.187 119.147,149.333 0,268.48 30.187,298.667     149.333,179.52 268.48,298.667 298.667,268.48 179.52,149.333   "/></g></svg>`;
   const labelDom = document.createElement("div");
@@ -10,7 +15,7 @@ export function createFilterDOM(label: string, columnLabel: string, filterIndex:
   // const filterIndex = this.filterList.length;
   dom.dataset.filterIndex = filterIndex.toString();
   deleteButtonDom.addEventListener("click", (e) => {
-    const currentTarget = e.currentTarget as HTMLDivElement;
+    const currentTarget = e.currentTarget as HTMLButtonElement;
     const filterIndex = parseInt(
       currentTarget!.parentElement!.dataset.filterIndex!, 10
     );

@@ -16,7 +16,7 @@ export type Elements = {
     wrapper: HTMLDivElement,
     inputWrapper: HTMLDivElement
     input?: FilterElementDom<unknown>,
-    submit: HTMLDivElement
+    submit: HTMLButtonElement
   }
 }
 

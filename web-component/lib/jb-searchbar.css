@@ -43,9 +43,15 @@
         padding: 0.5rem 0.5rem;
 
         .delete-btn {
+          all: unset;
+          box-sizing: border-box;
+
+          &:focus-visible {
+            outline: 2px solid var(--jb-searchbar-focus-ring-color, Highlight);
+            outline-offset: 2px;
+          }
           cursor: pointer;
           display: block;
-          box-sizing: border-box;
 
           svg {
             fill: var(--remove-button-color);
@@ -71,6 +77,13 @@
   }
 
   .search-button-wrapper {
+    all: unset;
+    box-sizing: border-box;
+
+    &:focus-visible {
+      outline: 2px solid var(--jb-searchbar-focus-ring-color, Highlight);
+      outline-offset: 2px;
+    }
     width: var(--search-button-size);
     height: var(--search-button-size);
     cursor: pointer;
