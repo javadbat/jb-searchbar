@@ -90,36 +90,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    svg {
+    jb-icon-search {
       height: 100%;
       aspect-ratio: 1/1;
-      box-sizing: border-box;
-      background-color: transparent;
-
-      circle {
-        stroke: var(--search-button-stroke);
-        fill: var(--search-button-fill);
-        stroke-width: 1.5625rem;
-      }
-
-      .spin-line-group {
-        transform-origin: center;
-        fill: transparent;
-
-        rect {
-          fill: transparent;
-        }
-
-        path {
-          fill: none;
-          stroke: var(--search-button-stroke);
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          transition: 0.2s;
-          stroke-width: 2.1875rem;
-          transform-origin: center;
-        }
-      }
+      --jb-icon-search-stroke: var(--search-button-stroke);
+      --jb-icon-search-fill: var(--search-button-fill);
     }
   }
 }

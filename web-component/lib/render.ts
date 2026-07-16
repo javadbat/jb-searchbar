@@ -12,13 +12,7 @@ export function renderHTML(): string {
         <slot name="extra" ></slot>
     </div>
     <button class="search-button-wrapper" part="search-button" type="button" aria-label="${dictionary.get(i18n, "search")}" aria-busy="false">
-        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="255" cy="255" r="170"></circle>
-            <g class="spin-line-group">
-                <rect x="0" y="0" width="512" height="512" />
-                <path class="convertable-line" d="M400 400 L 450 450"></path>
-            </g>
-        </svg>
+        <jb-icon-search aria-hidden="true"></jb-icon-search>
     </button>
   </div>
   `;

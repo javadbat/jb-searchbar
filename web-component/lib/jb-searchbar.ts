@@ -15,6 +15,7 @@ import { createFilterDOM } from "./utils";
 import './extra-filters/extra-filter.js';
 import type { SubmitEventDetail } from "./extra-filters/types";
 import type { JBExtraFilterWebComponent } from "./extra-filters/extra-filter.js";
+import "jb-icon/search";
 import { extractLabel } from "./extra-filters/utils";
 import { i18n } from "jb-core/i18n";
 import { dictionary } from "./i18n";
@@ -30,10 +31,8 @@ export class JBSearchbarWebComponent extends HTMLElement {
     return this.#isLoading;
   }
   set isLoading(value) {
-    if (!this.#isLoading && value === true) {
-      this.#playSearchIconAnimation();
-    }
     this.#isLoading = value;
+    this.elements.searchButton.icon.isLoading = value;
     this.elements.searchButton.wrapper.setAttribute("aria-busy", value ? "true" : "false");
   }
 
@@ -142,10 +141,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
       filterListWrapper: shadowRoot.querySelector(".filter-list-section") as HTMLDivElement,
       searchButton: {
         wrapper: shadowRoot.querySelector(".search-button-wrapper") as HTMLButtonElement,
-        svg: {
-          spinnerLine: shadowRoot.querySelector(".search-button-wrapper .convertable-line") as SVGClipPathElement,
-          spinnerBox: shadowRoot.querySelector(".search-button-wrapper .spin-line-group") as SVGGElement,
-        },
+        icon: shadowRoot.querySelector("jb-icon-search")!,
       },
       extraFilterSlot: shadowRoot.querySelector(`slot[name="extra"]`)!,
       filterSlot: shadowRoot.querySelector(`slot[name="filter"]`)!,
@@ -179,88 +175,6 @@ export class JBSearchbarWebComponent extends HTMLElement {
   }
 
 
-  #playSearchIconAnimation() {
-    const spinnerLine = this.elements.searchButton.svg.spinnerLine;
-    const spinnerBox = this.elements.searchButton.svg.spinnerBox;
-    const self = this;
-    const ShrinkLineAnimation = spinnerLine.animate(
-      [
-        { d: 'path("M400 400 L 450 450")' },
-        { d: 'path("M410 410 L 415 415")' },
-      ],
-      { id: "ShrinkLine", duration: 400 }
-    );
-    ShrinkLineAnimation.cancel();
-    const shrinkLineFunction = function () {
-      spinnerLine.setAttribute(
-        "d",
-        "M 407.82484150097946 413.25475607450323 A 220 220 0 0 0 413.25475607450323 407.8248415009794"
-      );
-      curveLineAnimation.play();
-    };
-    ShrinkLineAnimation.onfinish = shrinkLineFunction;
-    const curveLineAnimation = spinnerLine.animate(
-      [
-        {
-          d: 'path("M 407.82484150097946 413.25475607450323 A 220 220 0 0 0 413.25475607450323 407.8248415009794")',
-        },
-        { d: 'path("M 255 475 A 220 220 0 0 0 475 255")' },
-      ],
-      { id: "CurveLine", duration: 400 }
-    );
-    curveLineAnimation.cancel();
-    const curveLineFunction = function () {
-      spinnerLine.setAttribute("d", "M 255 475 A 220 220 0 0 0 475 255");
-      spinAnimation.play();
-    };
-    curveLineAnimation.onfinish = curveLineFunction;
-    const spinAnimation = spinnerBox.animate(
-      [
-        { transform: "rotate(0deg)" },
-        { transform: "rotate(180deg)" },
-        { transform: "rotate(360deg)" },
-      ],
-      { id: "Spin", duration: 1000, iterations: 1 }
-    );
-    spinAnimation.cancel();
-    const spinFunction = function () {
-      if (self.isLoading === true) {
-        spinAnimation.play();
-      } else {
-        ReverseCurveLineAnimation.play();
-      }
-    };
-    spinAnimation.onfinish = spinFunction;
-    const growLineAnimation = spinnerLine.animate(
-      [
-        { d: 'path("M410 410 L 415 415")' },
-        { d: 'path("M400 400 L 450 450")' },
-      ],
-      { id: "GrowLine", duration: 400 }
-    );
-    growLineAnimation.cancel();
-    const growLineFunction = function () {
-      spinnerLine.setAttribute("d", "M400 400 L 450 450");
-    };
-    growLineAnimation.onfinish = growLineFunction;
-
-    const ReverseCurveLineAnimation = spinnerLine.animate(
-      [
-        { d: 'path("M 255 475 A 220 220 0 0 0 475 255")' },
-        {
-          d: 'path("M 407.82484150097946 413.25475607450323 A 220 220 0 0 0 413.25475607450323 407.8248415009794")',
-        },
-      ],
-      { id: "ReverseCurveLine", duration: 400 }
-    );
-    ReverseCurveLineAnimation.cancel();
-    const ReverseCurveLineFunction = function () {
-      spinnerLine.setAttribute("d", "M410 410 L 415 415");
-      growLineAnimation.play();
-    };
-    ReverseCurveLineAnimation.onfinish = ReverseCurveLineFunction;
-    ShrinkLineAnimation.play();
-  }
   #dispatchOnChange() {
     const event = new CustomEvent("change");
     this.dispatchEvent(event);

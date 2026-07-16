@@ -6,7 +6,7 @@ export const webComponentList: WebComponentBuildConfig[] = [
     path: "./web-component/lib/jb-searchbar.ts",
     outputPath: "./web-component/dist/jb-searchbar.js",
     tsConfigPath: "./web-component/tsconfig.json",
-    external: ["jb-input", "jb-number-input", "jb-select", "jb-date-input", "jb-core", "jb-core/theme", "jb-core/i18n"],
+    external: ["jb-input", "jb-number-input", "jb-select", "jb-date-input", "jb-core", "jb-core/theme", "jb-core/i18n", "jb-icon/search"],
     umdName: "JBSearchbar",
     globals: {
       "jb-input": "JBInput",
@@ -16,7 +16,8 @@ export const webComponentList: WebComponentBuildConfig[] = [
       "jb-core":"JBCore",
       "jb-core/theme":"JBCoreTheme",
       "jb-core/i18n":"JBCoreI18N",
-      "jb-validation":"JBValidation"
+      "jb-validation":"JBValidation",
+      "jb-icon/search":"JBIconSearch"
     },
   },
 ];

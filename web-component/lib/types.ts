@@ -2,6 +2,7 @@ import type {EventTypeWithTarget} from 'jb-core';
 import type { JBSearchbarWebComponent } from "./jb-searchbar";
 import type {ValidationHelper} from "jb-validation";
 import type { JBExtraFilterWebComponent } from "./extra-filters/extra-filter";
+import type { JBIconSearchWebComponent } from "jb-icon/search";
 
 export type JBSearchbarElements = {
 
@@ -11,10 +12,7 @@ export type JBSearchbarElements = {
     extraFilters:JBExtraFilterWebComponent[]
     searchButton:{
         wrapper:HTMLButtonElement,
-        svg:{
-            spinnerLine:SVGClipPathElement,
-            spinnerBox:SVGGElement,
-        }
+        icon:JBIconSearchWebComponent,
     },
 }
 
