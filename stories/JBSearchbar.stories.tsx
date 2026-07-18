@@ -18,6 +18,8 @@ import {
   getSearchbar,
   waitForExtraFilterOptions,
 } from './test-utils';
+import { faker } from '@faker-js/faker';
+import { JBCheckbox } from 'jb-checkbox/react';
 const meta = {
   title: "Components/JBSearchbar",
   component: JBSearchbar,
@@ -25,6 +27,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const companyList  = faker.helpers.multiple(()=>faker.company.name(),{count:50})
 export const Normal: Story = {
 
   args: {
@@ -37,6 +40,11 @@ export const Normal: Story = {
             <JBOption value="1">Option 1</JBOption>
             <JBOption value="2">Option 2</JBOption>
             <JBOption value="3">Option 3</JBOption>
+          </JBSelect>
+          <JBSelect placeholder='Multi select' name="multiSelectFilter" multiple>
+            {
+              companyList.map(x=><JBOption value={x}><JBCheckbox/>{x}</JBOption>)
+            }
           </JBSelect>
         </div>
         <JBExtraFilter onExtractDisplayValue={(arg)=> {
