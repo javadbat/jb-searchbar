@@ -113,6 +113,27 @@ export class JBExtraFilterWebComponent extends HTMLElement {
         this.#elements.filterSelect.setAttribute("size", newValue);
     }
   }
+  /**
+   * clear intent column, used when we go back to column select or cancel current intent
+   */
+  #resetIntent() {
+    this.intentColumn.filterItem?.parentDom.appendChild(this.intentColumn.filterItem.dom);
+    this.intentColumn = {
+      name: null,
+      filterItem: null,
+      value: null,
+      valueString: null,
+      label: null,
+      active: false,
+    };
+    this.#elements.intent.input?.formResetCallback?.();
+    this.#elements.intent.submit.classList.remove("--active");
+    this.#elements.intent.submit.disabled = true;
+  }
+  #onIntentCancelled() {
+      this.inputState = "SELECT_COLUMN";
+      this.#resetIntent();
+  }
   #onIntentSubmitted() {
     if (
       this.intentColumn.filterItem &&
@@ -124,18 +145,8 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       this.intentColumn.active
     ) {
       this.#submitIntent();
-      this.intentColumn.filterItem.parentDom.appendChild(this.intentColumn.filterItem.dom);
       this.inputState = "SELECT_COLUMN";
-      this.intentColumn = {
-        name: null,
-        filterItem: null,
-        value: null,
-        valueString: null,
-        label: null,
-        active: false,
-      };
-      this.#elements.intent.submit.classList.remove("--active");
-      this.#elements.intent.submit.disabled = true;
+      this.#resetIntent();
     }
   }
   #submitIntent() {
@@ -177,12 +188,18 @@ export class JBExtraFilterWebComponent extends HTMLElement {
         this.#elements.intent.submit.setAttribute("title", input?.validation?.resultSummary?.message || "");
       }
     }
+    inputDom.focus?.();
     const updateIntentValue = () => { this.#setIntentValue(inputDom.value, this.extractDisplayValue({ value: inputDom.value, name: filter.key, dom: inputDom }), extractLabel(inputDom)) }
     updateIntentValidity(false);
     // add event listeners
     inputDom.addEventListener("change", async () => {
       await updateIntentValidity(true);
       updateIntentValue();
+    });
+    inputDom.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        this.#onIntentCancelled()
+      }
     });
     inputDom.addEventListener("input", async (e: InputEvent) => {
       updateIntentValidity(false);
@@ -218,7 +235,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   #filterElementAttributeObserver = new MutationObserver((records) => {
     records.forEach((record) => {
       if (record.type === "attributes" && record.attributeName === "name") {
-        if(record.oldValue === null && (record.target as FilterElementDom).name){
+        if (record.oldValue === null && (record.target as FilterElementDom).name) {
           // if element get proper name attribute (due to react delay or user late update)
           this.#addToList([record.target as FilterElementDom]);
         }
@@ -229,7 +246,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
           this.#filterList.delete(record.oldValue)
           const newName = (record.target as FilterElementDom).name;
           // when new name is empty it just mean we need to remove the element (we only accept named elements) 
-          if(newName){
+          if (newName) {
             this.#filterList.set(newName, value);
           }
         }
@@ -254,8 +271,8 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   }
   #addToList(nodeList: Element[]) {
     const formElements = nodeList.filter((x => ((x.constructor as any)?.formAssociated || 'form' in x))) as FilterElementDom<unknown>[];
-    const namedElements = formElements.filter(x=>(x as FilterElementDom).name);
-    const noNamedElements = formElements.filter(x=>(x as FilterElementDom).name === '');
+    const namedElements = formElements.filter(x => (x as FilterElementDom).name);
+    const noNamedElements = formElements.filter(x => (x as FilterElementDom).name === '');
     this.#handleNotDefinedWebComponents(nodeList);
     namedElements.forEach((fe) => {
       if (fe.parentElement) {
@@ -263,7 +280,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       }
     });
     //most of the time elements that exist in searchbar but have no name will be named later. here we watch for them.
-    noNamedElements.forEach(nne=>{this.#filterElementAttributeObserver.observe(nne,{attributeFilter:["name"],childList:false,subtree:false,attributes:true,attributeOldValue:true})})
+    noNamedElements.forEach(nne => { this.#filterElementAttributeObserver.observe(nne, { attributeFilter: ["name"], childList: false, subtree: false, attributes: true, attributeOldValue: true }) })
   }
   #slotObserver = new MutationObserver((records) => {
     records.forEach((record) => {

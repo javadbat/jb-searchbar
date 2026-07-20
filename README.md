@@ -124,6 +124,8 @@ Extra filters are filter templates that the user can choose from a dropdown. Pla
 
 Use `label` or `data-label` on each filter template. Use `data-label` when the visible input label should not be used as the selected filter label.
 
+> By Pressing `Esc` key intent field (selected field) will disappear and filter go to select column step again.
+
 ### data-max-count
 
 Use `data-max-count` on a filter template to limit how many times it can be selected.

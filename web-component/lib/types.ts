@@ -44,6 +44,10 @@ export type JBExtraFilterEventType<TEvent> = EventTypeWithTarget<TEvent,JBExtraF
 
 export type FilterElementDom<TValue = unknown> = HTMLElement & {
     validation?:ValidationHelper<unknown>,
+    /**
+     * standard form reset callback that reset input value & validation result
+     */
+    formResetCallback?:VoidFunction
     value: TValue,
     name:string,
 }
