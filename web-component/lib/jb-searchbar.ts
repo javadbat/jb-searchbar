@@ -15,7 +15,7 @@ import { createFilterDOM } from "./utils";
 import './extra-filters/extra-filter.js';
 import type { SubmitEventDetail } from "./extra-filters/types";
 import type { JBExtraFilterWebComponent } from "./extra-filters/extra-filter.js";
-import "jb-icon/search";
+import "jb-icons/search";
 import { extractLabel } from "./extra-filters/utils";
 import { i18n } from "jb-core/i18n";
 import { dictionary } from "./i18n";

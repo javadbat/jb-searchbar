@@ -46,6 +46,7 @@
     "url": "git@github.com:javadbat/jb-searchbar.git"
   },
   "dependencies": {
+    "jb-icon": ">=2.0.0",
     "jb-select": ">=6.5.0",
     "jb-validation":">=1.0.0",
     "jb-core":">=0.30.0"

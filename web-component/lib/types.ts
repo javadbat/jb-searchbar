@@ -2,7 +2,7 @@ import type {EventTypeWithTarget} from 'jb-core';
 import type { JBSearchbarWebComponent } from "./jb-searchbar";
 import type {ValidationHelper} from "jb-validation";
 import type { JBExtraFilterWebComponent } from "./extra-filters/extra-filter";
-import type { JBIconSearchWebComponent } from "jb-icon/search";
+import type { JBIconSearchWebComponent } from "jb-icons/search";
 
 export type JBSearchbarElements = {
 
