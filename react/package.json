@@ -30,6 +30,6 @@
     "url": "git@github.com:javadbat/jb-searchbar.git"
   },
   "dependencies": {
-    "jb-searchbar": ">=2.4.0"
+    "jb-searchbar": "^2.4.0"
   }
 }
