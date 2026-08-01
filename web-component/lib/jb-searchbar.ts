@@ -19,6 +19,7 @@ import "jb-icons/search";
 import { extractLabel } from "./extra-filters/utils";
 import { i18n } from "jb-core/i18n";
 import { dictionary } from "./i18n";
+import { parseBooleanAttribute } from "jb-core";
 export * from './types.js';
 export { JBExtraFilterWebComponent } from './extra-filters/extra-filter'
 export * from './extra-filters/types.js'
@@ -169,7 +170,7 @@ export class JBSearchbarWebComponent extends HTMLElement {
   attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null) {
     switch (name) {
       case "search-on-change":
-        this.searchOnChange = newValue === "" || newValue === "true";
+        this.searchOnChange = parseBooleanAttribute(newValue);
         break;
     }
   }

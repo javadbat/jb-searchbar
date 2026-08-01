@@ -8,6 +8,7 @@ import VariablesCSS from './variables.css';
 import type { JBSearchbarWebComponent } from "../jb-searchbar.js";
 import { dictionary } from "./i18n";
 import { i18n } from "jb-core/i18n";
+import { parseBooleanAttribute } from "jb-core";
 
 export class JBExtraFilterWebComponent extends HTMLElement {
   #elements: Elements;
@@ -96,7 +97,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     this.#elements.filterSelect.addEventListener("change", this.#onFilterSelected.bind(this));
     this.#elements.intent.submit.addEventListener("click", this.#onIntentSubmitted.bind(this));
     this.#elements.filterSelect.addEventListener("init", () => {
-      if (this.getAttribute("autofocus") === "") {
+      if (parseBooleanAttribute(this.getAttribute("autofocus"))) {
         this.#elements.filterSelect.focus();
       }
     });
