@@ -9,7 +9,7 @@ React wrapper for [`jb-searchbar`](https://github.com/javadbat/jb-searchbar). It
 
 ## Demo
 
-- [Storybook](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar)
+Explore the [React searchbar examples](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal), including [small sizing and loading](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size), [search-on-change](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-on-change), and [dynamic extra filters](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--change-extra-fields).
 
 ## Installation
 
@@ -23,7 +23,7 @@ import { JBSearchbar, JBExtraFilter } from 'jb-searchbar/react';
 
 ## When to use
 
-Use `JBSearchbar` when a React view needs a compact filter area that can collect normal filters, optional extra filters, display selected filter chips, and dispatch one search value object.
+Use `JBSearchbar` when a React view needs a compact filter area that can collect normal filters, optional extra filters, display selected filter chips, and dispatch one search value object. See the [normal filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal) for the complete interaction.
 
 ## Basic usage
 
@@ -45,25 +45,27 @@ Normal filters go in the `filter` slot. Optional filters go in `JBExtraFilter`, 
 
 | prop | type | description |
 | --- | --- | --- |
-| `searchOnChange` | `boolean` | Runs search after selected extra filters change. |
-| `isLoading` | `boolean` | Plays or stops the search icon loading animation. |
-| `size` | `'sm' \| 'md'` | Visual size variant. |
-| `onLoad` | `(event) => void` | Called from the web component `load` event. |
-| `onInit` | `(event) => void` | Called from the web component `init` event. |
-| `onSearch` | `(event) => void` | Called when search is triggered. |
+| `searchOnChange` | `boolean` | Runs search after selected extra filters change; see [search-on-change](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-on-change). |
+| `isLoading` | `boolean` | Plays or stops the search icon loading animation; see the [loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size). |
+| `size` | `'sm' \| 'md'` | Visual size variant; see the [size demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size). |
+| `onLoad` | `(event) => void` | Called from the web component `load` event; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
+| `onInit` | `(event) => void` | Called from the web component `init` event; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
+| `onSearch` | `(event) => void` | Called when search is triggered; see the [search interaction](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-interaction). |
 
 ### JBExtraFilter
 
 | prop | type | description |
 | --- | --- | --- |
-| `placeholder` | `string` | Placeholder for the filter select. |
-| `size` | `'sm' \| 'md'` | Visual size variant. |
-| `onExtractDisplayValue` | `ExtractDisplayValueCallback` | Converts a raw filter value to the chip display string. |
-| `onLoad` | `(event) => void` | Called from the web component `load` event. |
-| `onInit` | `(event) => void` | Called from the web component `init` event. |
-| `onIntentSubmit` | `(event) => void` | Called when the user submits an extra filter value. |
+| `placeholder` | `string` | Placeholder for the filter select; see the [extra filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal). |
+| `size` | `'sm' \| 'md'` | Visual size variant; see the [size demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size). |
+| `onExtractDisplayValue` | `ExtractDisplayValueCallback` | Converts a raw filter value to the chip display string; see [display formatting](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal). |
+| `onLoad` | `(event) => void` | Called from the web component `load` event; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
+| `onInit` | `(event) => void` | Called from the web component `init` event; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
+| `onIntentSubmit` | `(event) => void` | Called when the user submits an extra filter value; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
 
 ## Normal filters
+
+Place always-visible inputs in a wrapper with `slot="filter"`; see the [normal filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal).
 
 ```jsx
 <JBSearchbar onSearch={(event) => console.log(event.target.value)}>
@@ -75,6 +77,8 @@ Normal filters go in the `filter` slot. Optional filters go in `JBExtraFilter`, 
 ```
 
 ## Extra filters
+
+`JBExtraFilter` sets `slot="extra"` and turns named templates into selectable, removable chips; see the [extra filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal).
 
 `JBExtraFilter` automatically renders with `slot="extra"`.
 
@@ -89,9 +93,13 @@ Normal filters go in the `filter` slot. Optional filters go in `JBExtraFilter`, 
 
 ## jb-extra-filter API
 
+Use the `JBExtraFilter` props and callbacks shown in the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events).
+
 `JBExtraFilter` wraps the underlying `jb-extra-filter` web component. Use `placeholder`, `size`, `onIntentSubmit`, and `onExtractDisplayValue` from React, and put named filter input templates inside it.
 
 ## Display value formatting
+
+Use `onExtractDisplayValue` to control selected chip text; see the [normal filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal).
 
 ```tsx
 <JBExtraFilter
@@ -108,6 +116,8 @@ Normal filters go in the `filter` slot. Optional filters go in `JBExtraFilter`, 
 
 ## Search on change
 
+Set `searchOnChange` when adding or removing an extra filter should trigger `onSearch`; see the [search-on-change demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-on-change).
+
 ```jsx
 <JBSearchbar searchOnChange onSearch={(event) => console.log(event.target.value)}>
   <JBExtraFilter>
@@ -116,7 +126,13 @@ Normal filters go in the `filter` slot. Optional filters go in `JBExtraFilter`, 
 </JBSearchbar>
 ```
 
+## Size and RTL
+
+Use `size="sm"` for compact layouts. The [size/loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size) and [RTL demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--rtl-sample) show the responsive variants.
+
 ## Loading state
+
+Set `isLoading` while a request is running; see the [size and loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size).
 
 ```jsx
 <JBSearchbar isLoading={isSearching}>
@@ -126,9 +142,13 @@ Normal filters go in the `filter` slot. Optional filters go in `JBExtraFilter`, 
 </JBSearchbar>
 ```
 
+## Dynamic filter templates
+
+React updates `JBExtraFilter` options when its children change; see the [dynamic filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--change-extra-fields).
+
 ## Styling
 
-The React components use the same CSS variables and parts as the web components.
+The React components use the same CSS variables and parts as the web components. See the shared [web-component styling guidance](../README.md#css-parts-and-variables).
 
 ```css
 .report-searchbar {
@@ -143,15 +163,15 @@ The React components use the same CSS variables and parts as the web components.
 
 ## Value
 
-Read `event.target.value` in `onSearch`. The value is an object keyed by each named filter. Extra filters are included after the user submits them through `JBExtraFilter`.
+Read `event.target.value` in `onSearch`. The value is an object keyed by each named filter. Extra filters are included after the user submits them through `JBExtraFilter`; see the [search interaction](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-interaction).
 
 ## CSS parts and variables
 
-The React components expose the same CSS parts and variables as `jb-searchbar` and `jb-extra-filter`.
+The React components expose the same CSS parts and variables as `jb-searchbar` and `jb-extra-filter`; see the [normal searchbar demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal) and [size demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size).
 
 ## Accessibility notes
 
-Give each child filter input a clear label, placeholder, or `data-label`. Extra filter chips should have display values that are meaningful without relying only on visual context.
+Give each child filter input a clear label, placeholder, or `data-label`. Extra filter chips should have display values that are meaningful without relying only on visual context; see the [normal filter example](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal).
 
 ## Shared Documentation
 

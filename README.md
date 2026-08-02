@@ -17,14 +17,14 @@
 
 ## When to use
 
-Use `jb-searchbar` when a page needs a compact query/filter surface for lists, tables, reports, or dashboards.
+Use `jb-searchbar` when a page needs a compact query/filter surface for lists, tables, reports, or dashboards. See the [normal filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal) for the complete interaction.
 
 Use a normal form when filters need a full-page layout, complex grouping, or submit/reset controls outside the searchbar.
 
 ## Demo
 
-- [CodePen](https://codepen.io/javadbat/pen/rNjrZpy)
-- [Storybook](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar)
+- Try the [interactive searchbar examples](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal), including [small sizing and loading](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size), [search-on-change](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-on-change), and [dynamic extra filters](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--change-extra-fields).
+- See the [CodePen example](https://codepen.io/javadbat/pen/rNjrZpy) for a standalone web-component setup.
 
 ## Using With JS Frameworks
 
@@ -48,7 +48,7 @@ import 'jb-searchbar';
 
 ## How it works
 
-`jb-searchbar` supports two filter types:
+`jb-searchbar` supports two filter types. The [normal filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal) shows both in one searchbar:
 
 - Normal filters: always visible elements placed in `slot="filter"`.
 - Extra filters: hidden filter templates placed inside `<jb-extra-filter slot="extra">`. The user selects one, fills its value, and submits it into the searchbar as a removable filter chip.
@@ -59,44 +59,46 @@ import 'jb-searchbar';
 
 | name | type | default | description |
 | --- | --- | --- | --- |
-| `search-on-change` | `boolean` | `false` | Runs `search()` after selected extra filters change. Empty attribute and `"true"` mean true. |
-| `size` | `'sm' \| 'md'` | `md` style defaults | Visual size variant. |
+| `search-on-change` | `boolean` | `false` | Runs `search()` after selected extra filters change. Empty attribute and `"true"` mean true; see [search-on-change](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-on-change). |
+| `size` | `'sm' \| 'md'` | `md` style defaults | Visual size variant; see the [size and loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size). |
 
 ### jb-searchbar properties
 
 | name | type | readonly | description |
 | --- | --- | --- | --- |
-| `value` | `JBSearchbarValue` | yes | Current normal filter values plus selected extra filters. |
-| `filterList` | `FilterItem[]` | no | Selected extra-filter chips. This is runtime state, not the available filter template list. |
-| `searchOnChange` | `boolean` | no | Runs `search()` after selected extra filters change. |
-| `isLoading` | `boolean` | no | Plays or stops the search icon loading animation. |
+| `value` | `JBSearchbarValue` | yes | Current normal filter values plus selected extra filters; see the [value example](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-interaction). |
+| `filterList` | `FilterItem[]` | no | Selected extra-filter chips. This is runtime state, not the available filter template list; see [filter management](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--filter-management). |
+| `searchOnChange` | `boolean` | no | Runs `search()` after selected extra filters change; see [search-on-change](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-on-change). |
+| `isLoading` | `boolean` | no | Plays or stops the search icon loading animation; see the [loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size). |
 
 ### jb-searchbar methods
 
 | name | returns | description |
 | --- | --- | --- |
-| `search()` | `void` | Dispatches the `search` event. |
-| `deleteFilter(filterIndex)` | `void` | Removes a selected extra filter by index and dispatches `change`. |
-| `createFilterList()` | `FilterItem[]` | Creates the proxied selected-filter list used internally. |
+| `search()` | `void` | Dispatches the `search` event; see the [search interaction](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-interaction). |
+| `deleteFilter(filterIndex)` | `void` | Removes a selected extra filter by index and dispatches `change`; see [filter management](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--filter-management). |
+| `createFilterList()` | `FilterItem[]` | Creates the proxied selected-filter list used internally; see [filter management](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--filter-management). |
 
 ### jb-searchbar events
 
 | event | description |
 | --- | --- |
-| `load` | Dispatched from `connectedCallback` before initialization. |
-| `init` | Dispatched from `connectedCallback` after initialization. |
-| `search` | Dispatched when the search button is clicked or `search()` is called. |
-| `change` | Dispatched when a selected extra filter is added or removed. |
+| `load` | Dispatched from `connectedCallback` before initialization; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
+| `init` | Dispatched from `connectedCallback` after initialization; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
+| `search` | Dispatched when the search button is clicked or `search()` is called; see the [search interaction](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-interaction). |
+| `change` | Dispatched when a selected extra filter is added or removed; see [filter management](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--filter-management). |
 
 ### jb-searchbar slots
 
 | slot | description |
 | --- | --- |
-| `filter` | Always-visible filter elements. |
-| `extra` | One or more `<jb-extra-filter>` elements. |
-| `divider` | Optional divider content between normal filters and extra filters. |
+| `filter` | Always-visible filter elements; see [normal filters](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal). |
+| `extra` | One or more `<jb-extra-filter>` elements; see [extra filters](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal). |
+| `divider` | Optional divider content between normal filters and extra filters; see the [size demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size). |
 
 ## Normal filters
+
+Use `slot="filter"` for always-visible inputs; see the [normal filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal).
 
 Put always-visible filter elements inside an element with `slot="filter"`. The searchbar gathers elements that have a `name` and a `value` property.
 
@@ -111,6 +113,8 @@ Put always-visible filter elements inside an element with `slot="filter"`. The s
 ```
 
 ## Extra filters
+
+Use `<jb-extra-filter slot="extra">` for optional filters that become removable chips; see the [extra filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal).
 
 Extra filters are filter templates that the user can choose from a dropdown. Place them inside `<jb-extra-filter slot="extra">`.
 
@@ -130,7 +134,7 @@ Use `label` or `data-label` on each filter template. Use `data-label` when the v
 
 ### data-max-count
 
-Use `data-max-count` on a filter template to limit how many times it can be selected.
+Use `data-max-count` on a filter template to limit how many times it can be selected. The [normal filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal) includes a one-time filter.
 
 ```html
 <jb-extra-filter slot="extra">
@@ -144,34 +148,36 @@ Use `data-max-count` on a filter template to limit how many times it can be sele
 
 | name | type | default | description |
 | --- | --- | --- | --- |
-| `placeholder` | `string` | localized default | Placeholder for the filter select. |
-| `size` | `'sm' \| 'md'` | `md` style defaults | Visual size forwarded to the internal select. |
+| `placeholder` | `string` | localized default | Placeholder for the filter select; see the [extra filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal). |
+| `size` | `'sm' \| 'md'` | `md` style defaults | Visual size forwarded to the internal select; see the [size demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size). |
 | `autofocus` | `boolean` | `false` | Focuses the internal select after it initializes when set as an empty attribute. |
 
 ### jb-extra-filter properties
 
 | name | type | readonly | description |
 | --- | --- | --- | --- |
-| `inputState` | `'SELECT_COLUMN' \| 'FILL_VALUE'` | no | Current UI state. |
+| `inputState` | `'SELECT_COLUMN' \| 'FILL_VALUE'` | no | Current UI state; see the [extra filter interaction](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal). |
 | `intentColumn` | `IntentColumn` | no | Current selected filter draft before it is submitted. |
-| `extractDisplayValue` | `ExtractDisplayValueCallback` | no | Converts a filter value to the display string shown in the selected filter chip. |
+| `extractDisplayValue` | `ExtractDisplayValueCallback` | no | Converts a filter value to the display string shown in the selected filter chip; see [display formatting](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal). |
 
 ### jb-extra-filter methods
 
 | name | returns | description |
 | --- | --- | --- |
-| `updateSlotElements()` | `void` | Re-reads slotted filter templates and updates the select options. |
-| `setFilterListSelectOptionList()` | `void` | Updates the available option list after selected filters change. |
+| `updateSlotElements()` | `void` | Re-reads slotted filter templates and updates the select options; see the [dynamic filters demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--change-extra-fields). |
+| `setFilterListSelectOptionList()` | `void` | Updates the available option list after selected filters change; see [filter management](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--filter-management). |
 
 ### jb-extra-filter events
 
 | event | detail | description |
 | --- | --- | --- |
-| `load` | none | Dispatched from `connectedCallback` before parent lookup. |
-| `init` | none | Dispatched from `connectedCallback` after parent lookup. |
-| `intent-submit` | `{ name, label, displayValue, value }` | Dispatched when the user submits an extra filter value. |
+| `load` | none | Dispatched from `connectedCallback` before parent lookup; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
+| `init` | none | Dispatched from `connectedCallback` after parent lookup; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
+| `intent-submit` | `{ name, label, displayValue, value }` | Dispatched when the user submits an extra filter value; see the [events demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--events). |
 
 ## Value
+
+Read `.value` in a `search` or `change` handler; the [search interaction](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-interaction) shows the collected shape.
 
 Read `.value` from the searchbar to get normal filters and selected extra filters.
 
@@ -194,6 +200,8 @@ Each item contains:
 
 ## Search on change
 
+Set `searchOnChange` when selecting or removing an extra filter should trigger `search()` automatically. See the [search-on-change demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-on-change).
+
 ```html
 <jb-searchbar search-on-change></jb-searchbar>
 ```
@@ -204,9 +212,13 @@ const searchbar = document.querySelector('jb-searchbar');
 searchbar.searchOnChange = true;
 ```
 
+## Size and RTL
+
+Use `size="sm"` for compact layouts, and verify the searchbar in right-to-left layouts with the [size/loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size) and [RTL demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--rtl-sample).
+
 ## Loading state
 
-Set `isLoading` while a search request is running.
+Set `isLoading` while a search request is running; see the [size and loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size).
 
 ```js
 const searchbar = document.querySelector('jb-searchbar');
@@ -216,6 +228,8 @@ searchbar.isLoading = false;
 ```
 
 ## Display value formatting
+
+Use `extractDisplayValue` to control the text shown in selected filter chips; the [normal filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal) includes a custom date formatter.
 
 Use `extractDisplayValue` on `<jb-extra-filter>` when the raw value should be displayed differently.
 
@@ -230,9 +244,15 @@ extraFilter.extractDisplayValue = ({ name, value, dom }) => {
 };
 ```
 
+## Dynamic filter templates
+
+When filter templates are added or removed at runtime, call `updateSlotElements()` on `jb-extra-filter`; the [dynamic filter demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--change-extra-fields) shows the available options updating.
+
 ## CSS parts and variables
 
 ### jb-searchbar parts
+
+See the [normal searchbar demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal) for these parts in context.
 
 | part | description |
 | --- | --- |
@@ -241,6 +261,8 @@ extraFilter.extractDisplayValue = ({ name, value, dom }) => {
 | `search-button` | Search button wrapper. |
 
 ### jb-extra-filter parts
+
+See the [extra filter interaction](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--normal) for the selector, intent input, and submit button parts.
 
 | part | description |
 | --- | --- |
@@ -273,7 +295,7 @@ jb-searchbar {
 
 ## Accessibility notes
 
-- The search button is a clickable wrapper with an SVG icon. Add surrounding text or an external button if your page needs a visible text action.
+- The search button is a clickable wrapper with an SVG icon. Add surrounding text or an external button if your page needs a visible text action; see the [search interaction](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-interaction).
 - Filter elements keep their own accessibility behavior while slotted or moved into the extra-filter intent area.
 - Extra filter templates must have `name` attributes so values can be collected.
 

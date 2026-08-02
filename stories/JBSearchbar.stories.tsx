@@ -7,7 +7,7 @@ import { JBNumberInput } from 'jb-number-input/react';
 import { JBDateInput } from 'jb-date-input/react';
 import { JBOption, JBSelect } from 'jb-select/react';
 import type { JBDateInputWebComponent } from 'jb-date-input';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, fn, userEvent, waitFor } from 'storybook/test';
 import {
   chooseExtraFilter,
   fillIntentInput,
@@ -28,6 +28,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const companyList  = faker.helpers.multiple(()=>faker.company.name(),{count:50})
+const lifecycleCallbacks = {
+  searchbarLoad: fn(),
+  searchbarInit: fn(),
+  search: fn(),
+  extraFilterLoad: fn(),
+  extraFilterInit: fn(),
+  intentSubmit: fn(),
+};
 export const Normal: Story = {
 
   args: {
@@ -167,6 +175,93 @@ export const SearchOnChange: Story = {
     ...Normal.args,
     searchOnChange: true,
   }
+};
+
+export const SearchInteraction: Story = {
+  args: {
+    children: (
+      <div slot="filter">
+        <JBInput name="query" placeholder="Search" />
+      </div>
+    ),
+    onSearch: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const searchbar = getSearchbar(canvasElement);
+    searchbar.search();
+
+    await waitFor(() => {
+      expect(args.onSearch).toHaveBeenCalled();
+      expect(searchbar.value).toEqual([{ name: 'query', label: 'query', value: '' }]);
+    });
+  },
+};
+
+export const FilterManagement: Story = {
+  args: {
+    children: <div slot="filter"><JBInput name="query" placeholder="Search" /></div>,
+  },
+  play: async ({ canvasElement }) => {
+    const searchbar = getSearchbar(canvasElement);
+    searchbar.filterList.push({
+      name: 'status',
+      label: 'Status',
+      value: 'active',
+      displayValue: 'Active',
+    });
+
+    await waitFor(() => {
+      expect(searchbar.value).toContainEqual({
+        name: 'status',
+        label: 'Status',
+        value: 'active',
+        displayValue: 'Active',
+      });
+      expect(getFilterChip(searchbar).textContent).toContain('Status: Active');
+    });
+
+    searchbar.deleteFilter(0);
+    await waitFor(() => expect(searchbar.filterList).toHaveLength(0));
+  },
+};
+
+export const Events: Story = {
+  render: () => (
+    <JBSearchbar
+      onLoad={lifecycleCallbacks.searchbarLoad}
+      onInit={lifecycleCallbacks.searchbarInit}
+      onSearch={lifecycleCallbacks.search}
+    >
+      <JBExtraFilter
+        onLoad={lifecycleCallbacks.extraFilterLoad}
+        onInit={lifecycleCallbacks.extraFilterInit}
+        onIntentSubmit={lifecycleCallbacks.intentSubmit}
+      >
+        <JBInput name="status" data-label="Status" />
+      </JBExtraFilter>
+    </JBSearchbar>
+  ),
+  play: async ({ canvasElement }) => {
+    const searchbar = getSearchbar(canvasElement);
+    const extraFilter = getExtraFilter(canvasElement);
+    searchbar.dispatchEvent(new CustomEvent('load'));
+    searchbar.dispatchEvent(new CustomEvent('init'));
+    searchbar.dispatchEvent(new CustomEvent('search'));
+    extraFilter.dispatchEvent(new CustomEvent('load'));
+    extraFilter.dispatchEvent(new CustomEvent('init'));
+    extraFilter.dispatchEvent(new CustomEvent('intent-submit', {
+      detail: { name: 'status', label: 'Status', value: 'active', displayValue: 'Active' },
+    }));
+
+    await waitFor(() => {
+      expect(lifecycleCallbacks.searchbarLoad).toHaveBeenCalled();
+      expect(lifecycleCallbacks.searchbarInit).toHaveBeenCalled();
+      expect(lifecycleCallbacks.search).toHaveBeenCalled();
+      expect(lifecycleCallbacks.extraFilterLoad).toHaveBeenCalled();
+      expect(lifecycleCallbacks.extraFilterInit).toHaveBeenCalled();
+      expect(lifecycleCallbacks.intentSubmit).toHaveBeenCalled();
+    });
+  },
 };
 
 export const ChangeExtraFields: Story = {
