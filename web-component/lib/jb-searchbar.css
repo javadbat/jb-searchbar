@@ -3,7 +3,7 @@
   height: auto;
   min-height: var(--min-height);
   display: flex;
-
+  justify-content: space-between;
   .search-dynamic-wrapper {
     width: calc(100% - 3rem);
     height: auto;

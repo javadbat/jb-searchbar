@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.1.1] - 2026-08-3
+
+### Fixed
+
+- fix justify-content of searchbar.
+
 ## [3.1.0] - 2026-07-19
 
 ### Changed
