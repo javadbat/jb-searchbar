@@ -5,7 +5,8 @@ import { JBInput } from 'jb-input/react';
 import { JBButton } from 'jb-button/react';
 import { JBNumberInput } from 'jb-number-input/react';
 import { JBDateInput } from 'jb-date-input/react';
-import { JBOption, JBSelect } from 'jb-select/react';
+import { JBSelect } from 'jb-select/react';
+import { JBOption } from 'jb-select/option/react';
 import type { JBDateInputWebComponent } from 'jb-date-input';
 import { expect, fn, userEvent, waitFor } from 'storybook/test';
 import {

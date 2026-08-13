@@ -1,7 +1,7 @@
 import type { Elements, ExtractDisplayValueCallback, FilterList, FilterOption, InputState, IntentColumn, SubmitEventDetail } from "./types";
 import type { FilterElementDom } from "../types"
 import { extractLabel } from "./utils";
-import { JBOptionListWebComponent } from "jb-select";
+import { JBOptionListWebComponent } from "jb-select/option-list";
 import { renderHTML } from "./render";
 import CSS from './extra-filter.css';
 import VariablesCSS from './variables.css';

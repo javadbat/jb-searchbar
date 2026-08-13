@@ -1,4 +1,5 @@
-import type { JBOptionListWebComponent, JBSelectWebComponent } from "jb-select"
+import type { JBSelectWebComponent } from "jb-select"
+import type { JBOptionListWebComponent } from "jb-select/option-list";
 import type { FilterElementDom } from '../types';
 
 export type InputState = "SELECT_COLUMN" | "FILL_VALUE";
