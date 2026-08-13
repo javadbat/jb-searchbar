@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## [3.2.0] - 2026-08-13
 
 ### Changed
 
 - Updated component color defaults to use the shared semantic content and surface tokens.
+- Update jb-select version.
 
 ## [3.1.1] - 2026-08-3
 
