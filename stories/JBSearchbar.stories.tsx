@@ -81,6 +81,7 @@ export const Normal: Story = {
   play: async ({ canvasElement }) => {
     const searchbar = getSearchbar(canvasElement);
     const extraFilter = getExtraFilter(canvasElement);
+    const initialFilterOrder = Array.from(extraFilter.children).map((filter) => filter.getAttribute('name'));
 
     await waitForExtraFilterOptions(extraFilter, [
       'extraTextFilter',
@@ -121,6 +122,7 @@ export const Normal: Story = {
         displayValue: 'abc',
       });
       expect(getFilterChip(searchbar).textContent).toContain('minimum 3 : abc');
+      expect(Array.from(extraFilter.children).map((filter) => filter.getAttribute('name'))).toEqual(initialFilterOrder);
     });
   }
 };
@@ -220,6 +222,10 @@ export const FilterManagement: Story = {
       });
       expect(getFilterChip(searchbar).textContent).toContain('Status: Active');
     });
+
+    searchbar.filterList[0].displayValue = 'Inactive';
+    searchbar.renderFilterList();
+    await waitFor(() => expect(getFilterChip(searchbar).textContent).toContain('Status: Inactive'));
 
     searchbar.deleteFilter(0);
     await waitFor(() => expect(searchbar.filterList).toHaveLength(0));

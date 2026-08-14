@@ -78,6 +78,7 @@ import 'jb-searchbar';
 | `search()` | `void` | Dispatches the `search` event; see the [search interaction](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-interaction). |
 | `deleteFilter(filterIndex)` | `void` | Removes a selected extra filter by index and dispatches `change`; see [filter management](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--filter-management). |
 | `createFilterList()` | `FilterItem[]` | Creates the proxied selected-filter list used internally; see [filter management](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--filter-management). |
+| `renderFilterList()` | `void` | Rerenders all selected filter chips from the current `filterList`. |
 
 ### jb-searchbar events
 
@@ -141,6 +142,38 @@ Use `data-max-count` on a filter template to limit how many times it can be sele
   <jb-number-input name="age" data-label="Age" data-max-count="1"></jb-number-input>
 </jb-extra-filter>
 ```
+
+## Updating `filterList`
+
+`filterList` contains the extra filters that are currently selected and displayed as chips. Update the existing array with `push()` and remove items with `deleteFilter()` so `jb-searchbar` can keep the rendered chips in sync. Do not replace `filterList` with a new array.
+
+```js
+const searchbar = document.querySelector('jb-searchbar');
+
+// Add a selected filter chip.
+searchbar.filterList.push({
+  name: 'status',
+  label: 'Status',
+  value: 'active',
+  displayValue: 'Active',
+});
+// rerender filter list base on your update
+searchbar.renderFilterList();
+// Remove the selected filter at index 0.
+searchbar.deleteFilter(0);
+```
+
+Each item requires `name`, `label`, `value`, and `displayValue`. Calling `filterList.push()` immediately renders the new chip, but changing a property of an existing item does not rerender that chip. Call `renderFilterList()` after editing existing items:
+
+```js
+searchbar.filterList[0].value = 'inactive';
+searchbar.filterList[0].displayValue = 'Inactive';
+searchbar.renderFilterList();
+```
+
+To replace an existing item, you can also remove it with `deleteFilter(index)` and then add the new item with `filterList.push(...)`. Direct calls to `filterList.push()` and `renderFilterList()` update the chip UI but do not dispatch `change`; call `searchbar.search()` afterward if the programmatic update should immediately trigger a search.
+
+This property manages selected filter chips. To add or remove the available filter templates instead, update the children of `<jb-extra-filter>` and call `updateSlotElements()`.
 
 ## jb-extra-filter API
 

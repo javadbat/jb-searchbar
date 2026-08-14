@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.3.0] - 2026-08-14
+
+### Added
+
+- Added the public `renderFilterList()` method to rerender selected filter chips after programmatic changes to existing `filterList` items.
+
+### Fixed
+
+- Preserve the original order of extra-filter templates after submitting or canceling a filter intent.
+
 ## [3.2.0] - 2026-08-13
 
 ### Changed

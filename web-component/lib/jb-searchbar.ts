@@ -112,6 +112,15 @@ export class JBSearchbarWebComponent extends HTMLElement {
     return flProxy;
   }
 
+  renderFilterList() {
+    this.elements.filterListWrapper.replaceChildren();
+    this.filterList.forEach((filter, index) => {
+      const dom = createFilterDOM(filter.displayValue, filter.label, index, this.deleteFilter.bind(this));
+      filter.dom = dom;
+      this.elements.filterListWrapper.appendChild(dom);
+    });
+  }
+
   deleteFilter(filterIndex: number) {
     this.filterList.splice(filterIndex, 1);
     this.#dispatchOnChange();

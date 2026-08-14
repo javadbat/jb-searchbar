@@ -78,6 +78,10 @@
             {
               "name": "createFilterList",
               "description": "Creates the proxied selected-filter list used internally."
+            },
+            {
+              "name": "renderFilterList",
+              "description": "Rerenders all selected filter chips from the current filterList."
             }
           ],
           "events": [

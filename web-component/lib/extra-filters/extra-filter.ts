@@ -1,10 +1,10 @@
 import type { Elements, ExtractDisplayValueCallback, FilterList, FilterOption, InputState, IntentColumn, SubmitEventDetail } from "./types";
-import type { FilterElementDom } from "../types"
+import type { FilterElementDom } from "../types";
 import { extractLabel } from "./utils";
 import { JBOptionListWebComponent } from "jb-select/option-list";
 import { renderHTML } from "./render";
-import CSS from './extra-filter.css';
-import VariablesCSS from './variables.css';
+import CSS from "./extra-filter.css";
+import VariablesCSS from "./variables.css";
 import type { JBSearchbarWebComponent } from "../jb-searchbar.js";
 import { dictionary } from "./i18n";
 import { i18n } from "jb-core/i18n";
@@ -14,6 +14,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   #elements: Elements;
   #parentSearchbar: JBSearchbarWebComponent | null = null;
   #inputState: InputState = "SELECT_COLUMN";
+  #intentPositionPlaceholder: Comment | null = null;
   intentColumn: IntentColumn = {
     name: null,
     filterItem: null,
@@ -32,8 +33,8 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       return this.#extractDisplayValue;
     } else {
       return ({ name: _name, value }) => {
-        return String(value)
-      }
+        return String(value);
+      };
     }
   }
   set extractDisplayValue(value: ExtractDisplayValueCallback) {
@@ -61,22 +62,22 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   }
   constructor() {
     super();
-    const shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true, slotAssignment: "named", serializable: true });
+    const shadowRoot = this.attachShadow({ mode: "open", delegatesFocus: true, slotAssignment: "named", serializable: true });
 
     const html = `<style> ${VariablesCSS} \n ${CSS}</style>\n${renderHTML()}`;
     const element = document.createElement("template");
     element.innerHTML = html;
     shadowRoot.appendChild(element.content.cloneNode(true));
     this.#elements = {
-      filtersSlot: shadowRoot.querySelector('.filters-slot')!,
+      filtersSlot: shadowRoot.querySelector(".filters-slot")!,
       intent: {
-        wrapper: shadowRoot.querySelector('.intent-wrapper')!,
-        inputWrapper: shadowRoot.querySelector('.intent-input-wrapper')!,
-        submit: shadowRoot.querySelector('.intent-submit-button')!,
+        wrapper: shadowRoot.querySelector(".intent-wrapper")!,
+        inputWrapper: shadowRoot.querySelector(".intent-input-wrapper")!,
+        submit: shadowRoot.querySelector(".intent-submit-button")!,
       },
-      filterSelect: shadowRoot.querySelector('.filter-select')!,
-      columnSelectOptionList: shadowRoot.querySelector("#ColumnSelectOptionList")!
-    }
+      filterSelect: shadowRoot.querySelector(".filter-select")!,
+      columnSelectOptionList: shadowRoot.querySelector("#ColumnSelectOptionList")!,
+    };
     this.#registerEventListener();
     this.#initColumnList();
   }
@@ -114,11 +115,22 @@ export class JBExtraFilterWebComponent extends HTMLElement {
         this.#elements.filterSelect.setAttribute("size", newValue);
     }
   }
+  #placeBackFilterItem() {
+    const filterItem = this.intentColumn.filterItem;
+    if (filterItem) {
+      if (this.#intentPositionPlaceholder?.parentNode) {
+        this.#intentPositionPlaceholder.replaceWith(filterItem.dom);
+      } else {
+        filterItem.parentDom.appendChild(filterItem.dom);
+      }
+    }
+    this.#intentPositionPlaceholder = null;
+  }
   /**
    * clear intent column, used when we go back to column select or cancel current intent
    */
   #resetIntent() {
-    this.intentColumn.filterItem?.parentDom.appendChild(this.intentColumn.filterItem.dom);
+    this.#placeBackFilterItem();
     this.intentColumn = {
       name: null,
       filterItem: null,
@@ -132,8 +144,8 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     this.#elements.intent.submit.disabled = true;
   }
   #onIntentCancelled() {
-      this.inputState = "SELECT_COLUMN";
-      this.#resetIntent();
+    this.inputState = "SELECT_COLUMN";
+    this.#resetIntent();
   }
   #onIntentSubmitted() {
     if (
@@ -156,23 +168,28 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     const displayValue = this.intentColumn.valueString;
     const label = this.intentColumn.label;
     this.#dispatchSubmitEvent({
-      value, label, displayValue, name
-    })
+      value,
+      label,
+      displayValue,
+      name,
+    });
   }
   #dispatchSubmitEvent(value: SubmitEventDetail<unknown>) {
-    const event = new CustomEvent<SubmitEventDetail<unknown>>('intent-submit', { detail: value });
+    const event = new CustomEvent<SubmitEventDetail<unknown>>("intent-submit", { detail: value });
     this.dispatchEvent(event);
   }
   #onFilterSelected() {
-    const filter = this.#elements.filterSelect.value
+    const filter = this.#elements.filterSelect.value;
     if (!filter) return;
     const filterItem = this.#filterList.get(filter.key);
     if (!filterItem) return;
     this.intentColumn.name = filter.key;
     this.intentColumn.filterItem = filterItem;
     this.inputState = "FILL_VALUE";
-    const inputDom = filterItem.dom
+    const inputDom = filterItem.dom;
     this.#elements.intent.input = inputDom;
+    this.#intentPositionPlaceholder = document.createComment("jb-extra-filter intent position");
+    inputDom.before(this.#intentPositionPlaceholder);
     this.#elements.intent.inputWrapper.appendChild(inputDom);
     const updateIntentValidity = async (showError: boolean) => {
       const input = this.#elements.intent.input;
@@ -188,9 +205,11 @@ export class JBExtraFilterWebComponent extends HTMLElement {
         this.#elements.intent.submit.disabled = true;
         this.#elements.intent.submit.setAttribute("title", input?.validation?.resultSummary?.message || "");
       }
-    }
+    };
     inputDom.focus?.();
-    const updateIntentValue = () => { this.#setIntentValue(inputDom.value, this.extractDisplayValue({ value: inputDom.value, name: filter.key, dom: inputDom }), extractLabel(inputDom)) }
+    const updateIntentValue = () => {
+      this.#setIntentValue(inputDom.value, this.extractDisplayValue({ value: inputDom.value, name: filter.key, dom: inputDom }), extractLabel(inputDom));
+    };
     updateIntentValidity(false);
     // add event listeners
     inputDom.addEventListener("change", async () => {
@@ -198,8 +217,8 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       updateIntentValue();
     });
     inputDom.addEventListener("keydown", (e: KeyboardEvent) => {
-      if (e.key === 'Escape' || e.key === 'Esc') {
-        this.#onIntentCancelled()
+      if (e.key === "Escape" || e.key === "Esc") {
+        this.#onIntentCancelled();
       }
     });
     inputDom.addEventListener("input", async (e: InputEvent) => {
@@ -209,7 +228,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     inputDom.addEventListener("enter", () => {
       updateIntentValue();
       this.#onIntentSubmitted();
-    })
+    });
   }
   #setIntentValue(value: unknown, valueString: string, label: string) {
     this.intentColumn.value = value;
@@ -217,24 +236,23 @@ export class JBExtraFilterWebComponent extends HTMLElement {
     this.intentColumn.valueString = valueString;
   }
   #handleNotDefinedWebComponents(elements: Element[]) {
-    elements.forEach((element) => {
+    elements.forEach(element => {
       if (element.tagName.includes("-")) {
         const webComponentClass = customElements.get(element.tagName.toLowerCase());
         if (webComponentClass === undefined) {
-          customElements.whenDefined(element.tagName.toLowerCase()).then((definedConstructor) => {
+          customElements.whenDefined(element.tagName.toLowerCase()).then(definedConstructor => {
             if ((definedConstructor as any).formAssociated) {
               this.updateSlotElements();
             }
-
-          })
+          });
         }
       }
-    })
+    });
   }
   //it's not observable so call update after change
   #filterList: FilterList = new Map();
-  #filterElementAttributeObserver = new MutationObserver((records) => {
-    records.forEach((record) => {
+  #filterElementAttributeObserver = new MutationObserver(records => {
+    records.forEach(record => {
       if (record.type === "attributes" && record.attributeName === "name") {
         if (record.oldValue === null && (record.target as FilterElementDom).name) {
           // if element get proper name attribute (due to react delay or user late update)
@@ -244,9 +262,9 @@ export class JBExtraFilterWebComponent extends HTMLElement {
         if (record.oldValue === null) return;
         const value = this.#filterList.get(record.oldValue);
         if (value) {
-          this.#filterList.delete(record.oldValue)
+          this.#filterList.delete(record.oldValue);
           const newName = (record.target as FilterElementDom).name;
-          // when new name is empty it just mean we need to remove the element (we only accept named elements) 
+          // when new name is empty it just mean we need to remove the element (we only accept named elements)
           if (newName) {
             this.#filterList.set(newName, value);
           }
@@ -255,62 +273,69 @@ export class JBExtraFilterWebComponent extends HTMLElement {
       if (record.type === "attributes" && (record.attributeName === "label" || record.attributeName === "data-label")) {
         this.setFilterListSelectOptionList();
       }
-    })
-  })
+    });
+  });
   #initColumnList() {
     const filtersSlot = this.#elements.filtersSlot;
-    filtersSlot.addEventListener('slotchange', this.updateSlotElements.bind(this));
-    this.#filterElementAttributeObserver.observe(this, { attributeFilter: ["name", "label", "data-label"], attributeOldValue: true, childList: true, attributes: true, subtree: true, characterData: false })
+    filtersSlot.addEventListener("slotchange", this.updateSlotElements.bind(this));
+    this.#filterElementAttributeObserver.observe(this, {
+      attributeFilter: ["name", "label", "data-label"],
+      attributeOldValue: true,
+      childList: true,
+      attributes: true,
+      subtree: true,
+      characterData: false,
+    });
     this.updateSlotElements();
   }
   #removeFromList(nodeList: Element[]) {
     const removeList = Array.from(this.#filterList).filter(x => nodeList.includes(x[1].dom));
-    removeList.forEach((item) => {
+    removeList.forEach(item => {
       this.#filterList.delete(item[0]);
-    })
-
+    });
   }
   #addToList(nodeList: Element[]) {
-    const formElements = nodeList.filter((x => ((x.constructor as any)?.formAssociated || 'form' in x))) as FilterElementDom<unknown>[];
+    const formElements = nodeList.filter(x => (x.constructor as any)?.formAssociated || "form" in x) as FilterElementDom<unknown>[];
     const namedElements = formElements.filter(x => (x as FilterElementDom).name);
-    const noNamedElements = formElements.filter(x => (x as FilterElementDom).name === '');
+    const noNamedElements = formElements.filter(x => (x as FilterElementDom).name === "");
     this.#handleNotDefinedWebComponents(nodeList);
-    namedElements.forEach((fe) => {
+    namedElements.forEach(fe => {
       if (fe.parentElement) {
         this.#filterList.set(fe.name, { dom: fe, parentDom: fe.parentElement });
       }
     });
     //most of the time elements that exist in searchbar but have no name will be named later. here we watch for them.
-    noNamedElements.forEach(nne => { this.#filterElementAttributeObserver.observe(nne, { attributeFilter: ["name"], childList: false, subtree: false, attributes: true, attributeOldValue: true }) })
+    noNamedElements.forEach(nne => {
+      this.#filterElementAttributeObserver.observe(nne, { attributeFilter: ["name"], childList: false, subtree: false, attributes: true, attributeOldValue: true });
+    });
   }
-  #slotObserver = new MutationObserver((records) => {
-    records.forEach((record) => {
-      record.removedNodes.forEach((removedNode) => {
+  #slotObserver = new MutationObserver(records => {
+    records.forEach(record => {
+      record.removedNodes.forEach(removedNode => {
         if (removedNode.nodeType === 1) {
-          this.#removeFromList([removedNode as Element])
+          this.#removeFromList([removedNode as Element]);
         }
-      })
-      record.addedNodes.forEach((addedNode) => {
+      });
+      record.addedNodes.forEach(addedNode => {
         if (addedNode.nodeType === 1) {
-          this.#addToList([addedNode as Element])
+          this.#addToList([addedNode as Element]);
         }
-      })
+      });
       this.setFilterListSelectOptionList();
-    })
-  })
+    });
+  });
   /**
- * @public need to be accessed from outside for some scenario that list does not update
- */
+   * @public need to be accessed from outside for some scenario that list does not update
+   */
   updateSlotElements() {
     const filtersElements = this.#elements.filtersSlot.assignedElements();
     this.#filterList.clear();
     this.#addToList(filtersElements);
     this.setFilterListSelectOptionList();
     this.#slotObserver.disconnect();
-    this.#slotObserver.observe(this.#elements.filtersSlot, { subtree: false, childList: true })
+    this.#slotObserver.observe(this.#elements.filtersSlot, { subtree: false, childList: true });
   }
   setFilterListSelectOptionList() {
-
     const optionList: FilterOption[] = [];
 
     for (const f of this.#filterList) {
@@ -327,19 +352,19 @@ export class JBExtraFilterWebComponent extends HTMLElement {
 
       optionList.push({
         label: extractLabel(filter.dom),
-        key
+        key,
       });
     }
     const setupSelect = () => {
-      this.#elements.columnSelectOptionList.callbacks.getTitle = (column) => {
+      this.#elements.columnSelectOptionList.callbacks.getTitle = column => {
         return column.label;
       };
       this.#elements.columnSelectOptionList.optionList = optionList;
-    }
+    };
     if (this.#elements.columnSelectOptionList instanceof JBOptionListWebComponent) {
       setupSelect();
     } else {
-      (this.#elements.columnSelectOptionList as HTMLElement).addEventListener('init', () => setupSelect())
+      (this.#elements.columnSelectOptionList as HTMLElement).addEventListener("init", () => setupSelect());
     }
   }
   #showColumnSelect() {
@@ -352,7 +377,7 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   }
   #setSearchbar() {
     if (this.parentElement?.tagName.toLowerCase() === "jb-searchbar") {
-      this.#parentSearchbar = this.parentElement as JBSearchbarWebComponent
+      this.#parentSearchbar = this.parentElement as JBSearchbarWebComponent;
     }
   }
 }
