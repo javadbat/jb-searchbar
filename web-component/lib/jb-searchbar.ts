@@ -226,3 +226,9 @@ export class JBSearchbarWebComponent extends JBBaseComponent {
   }
 }
 defineWebComponent("jb-searchbar", JBSearchbarWebComponent);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "jb-searchbar": JBSearchbarWebComponent;
+  }
+}

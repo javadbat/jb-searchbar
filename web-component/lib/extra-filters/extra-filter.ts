@@ -383,3 +383,9 @@ export class JBExtraFilterWebComponent extends JBBaseComponent {
 }
 
 defineWebComponent("jb-extra-filter", JBExtraFilterWebComponent);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "jb-extra-filter": JBExtraFilterWebComponent;
+  }
+}
