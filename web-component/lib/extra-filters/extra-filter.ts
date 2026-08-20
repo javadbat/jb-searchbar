@@ -1,3 +1,4 @@
+import { defineWebComponent, JBBaseComponent, parseBooleanAttribute } from "jb-core";
 import type { Elements, ExtractDisplayValueCallback, FilterList, FilterOption, InputState, IntentColumn, SubmitEventDetail } from "./types";
 import type { FilterElementDom } from "../types";
 import { extractLabel } from "./utils";
@@ -8,9 +9,8 @@ import VariablesCSS from "./variables.css";
 import type { JBSearchbarWebComponent } from "../jb-searchbar.js";
 import { dictionary } from "./i18n";
 import { i18n } from "jb-core/i18n";
-import { parseBooleanAttribute } from "jb-core";
 
-export class JBExtraFilterWebComponent extends HTMLElement {
+export class JBExtraFilterWebComponent extends JBBaseComponent {
   #elements: Elements;
   #parentSearchbar: JBSearchbarWebComponent | null = null;
   #inputState: InputState = "SELECT_COLUMN";
@@ -382,7 +382,4 @@ export class JBExtraFilterWebComponent extends HTMLElement {
   }
 }
 
-const myElementNotExists = !customElements.get("jb-extra-filter");
-if (myElementNotExists) {
-  window.customElements.define("jb-extra-filter", JBExtraFilterWebComponent);
-}
+defineWebComponent("jb-extra-filter", JBExtraFilterWebComponent);
