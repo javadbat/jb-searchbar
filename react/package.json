@@ -27,7 +27,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:javadbat/jb-searchbar.git"
+    "url": "https://github.com/javadbat/jb-searchbar.git"
   },
   "dependencies": {
     "jb-searchbar": "^2.4.0"

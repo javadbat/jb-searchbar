@@ -43,7 +43,7 @@
   "customElements": "web-component/custom-elements.json",
   "repository": {
     "type": "git",
-    "url": "git@github.com:javadbat/jb-searchbar.git"
+    "url": "https://github.com/javadbat/jb-searchbar.git"
   },
   "dependencies": {
     "jb-icons": "^2.2.0",
