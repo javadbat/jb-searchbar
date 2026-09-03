@@ -32,9 +32,10 @@ export class JBSearchbarWebComponent extends JBBaseComponent {
     return this.#isLoading;
   }
   set isLoading(value) {
-    this.#isLoading = value;
-    this.elements.searchButton.icon.isLoading = value;
-    this.elements.searchButton.wrapper.setAttribute("aria-busy", value ? "true" : "false");
+    this.#isLoading = Boolean(value);
+    this.toggleAttribute("is-loading", this.#isLoading);
+    this.elements.searchButton.icon.isLoading = this.#isLoading;
+    this.elements.searchButton.wrapper.setAttribute("aria-busy", this.#isLoading ? "true" : "false");
   }
 
   get value(): JBSearchbarValue {
@@ -174,12 +175,15 @@ export class JBSearchbarWebComponent extends JBBaseComponent {
     })
   }
   static get observedAttributes() {
-    return ["search-on-change"];
+    return ["search-on-change", "is-loading"];
   }
   attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null) {
     switch (name) {
       case "search-on-change":
         this.searchOnChange = parseBooleanAttribute(newValue);
+        break;
+      case "is-loading":
+        this.isLoading = parseBooleanAttribute(newValue);
         break;
     }
   }

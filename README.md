@@ -60,6 +60,7 @@ import 'jb-searchbar';
 | name | type | default | description |
 | --- | --- | --- | --- |
 | `search-on-change` | `boolean` | `false` | Runs `search()` after selected extra filters change. Empty attribute and `"true"` mean true; see [search-on-change](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--search-on-change). |
+| `is-loading` | `boolean` | `false` | Plays the search icon loading animation. Empty attribute and `"true"` mean true. |
 | `size` | `'sm' \| 'md'` | `md` style defaults | Visual size variant; see the [size and loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size). |
 
 ### jb-searchbar properties
@@ -251,7 +252,7 @@ Use `size="sm"` for compact layouts, and verify the searchbar in right-to-left l
 
 ## Loading state
 
-Set `isLoading` while a search request is running; see the [size and loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size).
+Set `isLoading` in JavaScript or `is-loading` in HTML while a search request is running; see the [size and loading demo](https://javadbat.github.io/design-system/?path=/story/components-jbsearchbar--size).
 
 ```js
 const searchbar = document.querySelector('jb-searchbar');
@@ -271,7 +272,7 @@ const extraFilter = document.querySelector('jb-extra-filter');
 
 extraFilter.extractDisplayValue = ({ name, value, dom }) => {
   if (name === 'createdAt') {
-    return dom.inputValue;
+    return dom.displayValue;
   }
   return String(value);
 };
@@ -349,5 +350,6 @@ jb-searchbar {
 - Use `data-max-count="1"` when a filter can only be selected once.
 - Read `searchbar.value` inside `search` or `change` events.
 - Use `searchOnChange` as a JavaScript property or `search-on-change` as an HTML attribute.
+- Use `isLoading` as a JavaScript property or `is-loading` as an HTML attribute.
 - This package includes [`custom-elements.json`](./custom-elements.json) and points to it with the package.json `customElements` field. The field is documented by the Custom Elements Manifest project in [Referencing manifests from npm packages](https://github.com/webcomponents/custom-elements-manifest#referencing-manifests-from-npm-packages).
 - In `custom-elements.json`, `exports.kind: "custom-element-definition"` maps `jb-searchbar` and `jb-extra-filter` tag names to their implementation classes.

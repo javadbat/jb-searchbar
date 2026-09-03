@@ -59,7 +59,7 @@ export const Normal: Story = {
         <JBExtraFilter onExtractDisplayValue={(arg)=> {
           switch(arg.name){
             case 'extraDateFilter':
-            return (arg.dom as unknown as JBDateInputWebComponent).inputValue
+            return (arg.dom as unknown as JBDateInputWebComponent).displayValue
           }
           return String(arg.value);
           }}>
@@ -141,7 +141,7 @@ export const Size: Story = {
         <JBExtraFilter size='sm' onExtractDisplayValue={(arg)=> {
           switch(arg.name){
             case 'extraDateFilter':
-            return (arg.dom as unknown as JBDateInputWebComponent).inputValue
+            return (arg.dom as unknown as JBDateInputWebComponent).displayValue
           }
           return String(arg.value);
           }}>
@@ -160,6 +160,13 @@ export const Size: Story = {
     },
     size:'sm',
     isLoading:true
+  },
+  play: async ({ canvasElement }) => {
+    const searchbar = getSearchbar(canvasElement);
+    await waitFor(() => {
+      expect(searchbar.isLoading).toBe(true);
+      expect(searchbar.hasAttribute('is-loading')).toBe(true);
+    });
   },
 };
 export const RTLSample: Story = {

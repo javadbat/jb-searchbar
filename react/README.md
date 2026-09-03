@@ -105,7 +105,7 @@ Use `onExtractDisplayValue` to control selected chip text; see the [normal filte
 <JBExtraFilter
   onExtractDisplayValue={({ name, value, dom }) => {
     if (name === 'createdAt') {
-      return dom.inputValue;
+      return dom.displayValue;
     }
     return String(value);
   }}
@@ -191,4 +191,5 @@ For filter behavior, value shape, slots, web-component events, CSS parts, and CS
 - Add `name` and `data-label` to filter template elements.
 - Use `event.target.value` in `onSearch` to read collected filter values.
 - Use `searchOnChange`, not `search-on-change`, in React.
+- Use `isLoading` in React; the corresponding HTML attribute is `is-loading`.
 - Use `onExtractDisplayValue` to customize selected chip display text.

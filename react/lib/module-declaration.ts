@@ -8,6 +8,7 @@ declare module "react" {
       'jb-extra-filter': JBExtraFilterElement;
     }
     interface JBSearchbarElement extends React.DetailedHTMLProps<React.HTMLAttributes<JBSearchbarWebComponent>, JBSearchbarWebComponent> {
+      "is-loading"?: string,
     }
     interface JBExtraFilterElement extends React.DetailedHTMLProps<React.HTMLAttributes<JBExtraFilterWebComponent>, JBExtraFilterWebComponent> {
       placeholder?:string,

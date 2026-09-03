@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.0.0] - 2026-09-03
+
+### Changed
+
+- Added the standard `is-loading` HTML attribute and reflection for the existing `isLoading` property.
+
 ## [3.4.0] 2026-09-02
 
 ### Changed

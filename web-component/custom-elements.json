@@ -24,6 +24,13 @@
               }
             },
             {
+              "name": "is-loading",
+              "description": "Plays the search icon loading animation. Empty attribute and true mean true.",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
               "name": "size",
               "description": "Visual size variant.",
               "type": {
