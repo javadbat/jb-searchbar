@@ -14,7 +14,7 @@
     "search bar",
     "web component"
   ],
-  "version": "4.0.0",
+  "version": "3.5.0",
   "bugs": "https://github.com/javadbat/jb-searchbar/issues",
   "license": "MIT",
   "files": [
@@ -46,9 +46,9 @@
     "url": "https://github.com/javadbat/jb-searchbar.git"
   },
   "dependencies": {
-    "jb-icons": "^2.3.0",
-    "jb-select": "^8.1.1",
+    "jb-icons": "^2.5.0",
+    "jb-select": "^9.0.0",
     "jb-validation":"^1.0.0",
-    "jb-core":"^0.36.0"
+    "jb-core":"^0.37.0"
   }
 }
