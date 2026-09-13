@@ -43,7 +43,7 @@ export const Normal: Story = {
     children:
       <Fragment>
         <div slot="filter">
-          <JBInput placeholder='text filter' name="textFilter"/>
+          <JBInput placeholder='text filter' name="textFilter" clearable/>
           <JBNumberInput placeholder='number filter' name="numberFilter" showControlButton/>
           <JBSelect placeholder='Option filter' name="optionFilter">
             <JBOption value="1">Option 1</JBOption>
