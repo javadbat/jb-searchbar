@@ -91,7 +91,7 @@ export class JBExtraFilterWebComponent extends JBBaseComponent {
     this.dispatchEvent(event);
   }
   callOnInitEvent() {
-    const event = new CustomEvent("init", { bubbles: true, composed: true });
+    const event = new CustomEvent("init", { bubbles: true, composed: false });
     this.dispatchEvent(event);
   }
   #registerEventListener() {
@@ -101,7 +101,7 @@ export class JBExtraFilterWebComponent extends JBBaseComponent {
       if (parseBooleanAttribute(this.getAttribute("autofocus"))) {
         this.#elements.filterSelect.focus();
       }
-    });
+    },{once:true});
   }
   static get observedAttributes() {
     return ["placeholder", "size"];
@@ -364,7 +364,7 @@ export class JBExtraFilterWebComponent extends JBBaseComponent {
     if (this.#elements.columnSelectOptionList instanceof JBOptionListWebComponent) {
       setupSelect();
     } else {
-      (this.#elements.columnSelectOptionList as HTMLElement).addEventListener("init", () => setupSelect());
+      (this.#elements.columnSelectOptionList as HTMLElement).addEventListener("init", () => setupSelect(), {once: true});
     }
   }
   #showColumnSelect() {

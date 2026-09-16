@@ -138,7 +138,7 @@ export class JBSearchbarWebComponent extends JBBaseComponent {
     this.dispatchEvent(event);
   }
   callOnInitEvent() {
-    const event = new CustomEvent("init", { bubbles: true, composed: true });
+    const event = new CustomEvent("init", { bubbles: true, composed: false });
     this.dispatchEvent(event);
   }
   #initWebComponent() {
